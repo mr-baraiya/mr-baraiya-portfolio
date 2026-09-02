@@ -76,8 +76,16 @@ export const Gojo3DCanvas = () => {
       side: THREE.DoubleSide
     });
 
-    // 6. Load FBX 3D Model from /models/phoenix-bird/source/fly.fbx
-    const fbxLoader = new FBXLoader();
+    // 6. Load FBX 3D Model with URLModifier for .tga -> .tga.png redirect
+    const manager = new THREE.LoadingManager();
+    manager.setURLModifier((url) => {
+      if (url.endsWith('.tga')) {
+        return url + '.png';
+      }
+      return url;
+    });
+
+    const fbxLoader = new FBXLoader(manager);
     let mixer;
     let model;
 
