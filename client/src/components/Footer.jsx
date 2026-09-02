@@ -31,7 +31,7 @@ export const Footer = ({ profileData = {} }) => {
     huggingface = 'https://huggingface.co/mr-baraiya',
     twitter = 'https://x.com/mr_baraiya_32',
     youtube = 'https://www.youtube.com/@Vi.685_junior',
-    instagram = 'https://www.instagram.com/mr_baraiya_32/',
+    instagram = 'https://www.instagram.com/vishalbaraiya_1014/',
     whatsapp = 'https://wa.me/917383359679',
     email = 'baraiyavishalbhai32@gmail.com'
   } = profileData;

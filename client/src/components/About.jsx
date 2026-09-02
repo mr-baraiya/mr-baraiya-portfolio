@@ -11,7 +11,7 @@ export const About = ({ profile = {} }) => {
     phone = '+91 7383359679',
     whatsapp = profile?.whatsappUrl || profile?.whatsapp || 'https://wa.me/917383359679',
     linkedin = profile?.linkedinUrl || profile?.linkedin || 'https://www.linkedin.com/in/baraiya-vishalbhai/',
-    instagram = profile?.instagramUrl || profile?.instagram || 'https://www.instagram.com/mr_baraiya_32/',
+    instagram = profile?.instagramUrl || profile?.instagram || 'https://www.instagram.com/vishalbaraiya_1014/',
     email = profile?.email || 'baraiyavishalbhai32@gmail.com',
     location = profile?.location || 'Botad, Gujarat, India - 364710 (Open to Remote)'
   } = profile;
@@ -34,7 +34,7 @@ export const About = ({ profile = {} }) => {
     {
       name: 'Instagram',
       url: instagram,
-      handle: '@mr_baraiya_32',
+      handle: '@vishalbaraiya_1014',
       icon: Instagram,
       badge: 'Personal & Tech Updates'
     }
