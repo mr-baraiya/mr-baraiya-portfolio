@@ -19,9 +19,11 @@ export const connectDB = async () => {
 };
 
 export const getDBStatus = () => {
+  const isConn = mongoose.connection.readyState === 1;
   return {
-    isConnected: mongoose.connection.readyState === 1,
+    isConnected: isConn,
     readyState: mongoose.connection.readyState,
+    state: isConn ? 'Connected' : 'Disconnected',
     host: mongoose.connection.host || 'Disconnected',
     name: mongoose.connection.name || 'portfolio_db'
   };
