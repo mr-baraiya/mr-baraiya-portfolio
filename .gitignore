@@ -13,6 +13,7 @@ server/.env
 server/.env.local
 
 # Production Build Output
+dist/
 client/dist/
 client/dist-ssr/
 build/
