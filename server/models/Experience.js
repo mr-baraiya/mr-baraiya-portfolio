@@ -5,7 +5,7 @@ const experienceSchema = new mongoose.Schema({
   company: { type: String, required: true },
   location: { type: String, default: 'Remote / On-site' },
   period: { type: String, required: true },
-  type: { type: String, default: 'Work', enum: ['Work', 'Education', 'Certification'] },
+  type: { type: String, default: 'Work' },
   description: { type: String, required: true },
   highlights: [{ type: String }],
   order: { type: Number, default: 0 }

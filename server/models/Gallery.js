@@ -4,7 +4,6 @@ const gallerySchema = new mongoose.Schema({
   title: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Certificates', 'Hackathons', 'Awards', 'Achievements'], 
     default: 'Certificates' 
   },
   issuer: { type: String, required: true },
