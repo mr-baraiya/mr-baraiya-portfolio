@@ -21,10 +21,11 @@ Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Exp
 
 ## Environment Variables
 
-### Server (.env)
+### Server (`server/.env`)
 
-Set up a .env file in the server directory:
+Set up a `.env` file in the `server` directory:
 
+```env
 PORT=5000
 NODE_ENV=development
 MONGO_URI=mongodb://127.0.0.1:27017/portfolio_db
@@ -35,30 +36,39 @@ SMTP_PORT=587
 SMTP_USER=your_email@gmail.com
 SMTP_PASS=your_app_password
 ADMIN_ALERT_EMAIL=your_email@gmail.com
+```
 
-### Client (.env)
+### Client (`client/.env`)
 
-Set up a .env file in the client directory:
+Set up a `.env` file in the `client` directory:
 
+```env
 VITE_API_URL=http://localhost:5000/api
+```
 
 ## Local Installation & Setup
 
 1. Clone the repository:
-git clone https.github.com/mr-baraiya/mr-baraiya-portfolio.git
+```bash
+git clone https://github.com/mr-baraiya/mr-baraiya-portfolio.git
 cd mr-baraiya-portfolio
+```
 
-2. Install backend dependencies and run server:
+2. Install backend dependencies and start server:
+```bash
 cd server
 npm install
 npm run dev
+```
 
-3. Install frontend dependencies and run client:
+3. Install frontend dependencies and start client:
+```bash
 cd ../client
 npm install
 npm run dev
+```
 
-4. Open http://localhost:5173 in your browser.
+4. Open `http://localhost:5173` in your browser.
 
 ## License
 
