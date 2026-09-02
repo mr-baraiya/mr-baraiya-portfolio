@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = API_BASE_URL;
 
 // Get token from localStorage
 export const getAuthToken = () => localStorage.getItem('adminToken');
