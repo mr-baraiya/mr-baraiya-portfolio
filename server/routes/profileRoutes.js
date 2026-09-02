@@ -30,7 +30,8 @@ const defaultProfile = {
   huggingfaceUrl: 'https://huggingface.co/mr-baraiya',
   twitterUrl: 'https://x.com/baraiya1014',
   youtubeUrl: 'https://www.youtube.com/@Vi.685_junior',
-  instagramUrl: 'https://www.instagram.com/vishalbaraiya_1014/',
+  instagramUrl: 'https://www.instagram.com/mr_baraiya_32/',
+  whatsappUrl: 'https://wa.me/917383359679',
 
   projectsCompleted: '21+',
   yearsExperience: '2+',

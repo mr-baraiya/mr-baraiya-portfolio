@@ -1,19 +1,33 @@
 import React from 'react';
 import { User, Award, GraduationCap, Code2, Cpu, CheckCircle2, BookOpen, GitPullRequest, Terminal, MessageCircle, Linkedin, Instagram, ExternalLink, Mail, MapPin, Phone } from 'lucide-react';
 
-export const About = ({ profile }) => {
+export const About = ({ profile = {} }) => {
+  const {
+    name = 'Vishal Baraiya',
+    role = 'Software Engineer & CS Student | Web Development, AI/ML & DevOps',
+    bio = 'Computer Science student at Darshan University (9.24 CGPA). I build web applications, explore AI/ML RAG pipelines, and share what I learn through teaching.',
+    aboutText1 = "Hi, I'm Vishal Baraiya! I'm a Computer Science student and software developer based in Botad, Gujarat. I love building practical software solutions — from responsive web apps and REST APIs to AI-driven automation workflows.",
+    aboutText2 = "Currently pursuing my B.Tech at Darshan University with a 9.24 CGPA, I work with React, Next.js, Node.js, ASP.NET Core, FastAPI, and Python. I've solved 300+ problems on LeetCode, qualified GATE 2026 (AIR 4226), and cleared TCS CodeVita.",
+    phone = '+91 7383359679',
+    whatsapp = profile?.whatsappUrl || profile?.whatsapp || 'https://wa.me/917383359679',
+    linkedin = profile?.linkedinUrl || profile?.linkedin || 'https://www.linkedin.com/in/baraiya-vishalbhai/',
+    instagram = profile?.instagramUrl || profile?.instagram || 'https://www.instagram.com/mr_baraiya_32/',
+    email = profile?.email || 'baraiyavishalbhai32@gmail.com',
+    location = profile?.location || 'Botad, Gujarat, India - 364710 (Open to Remote)'
+  } = profile;
+
   const socialConnectButtons = [
     {
       name: 'WhatsApp',
-      url: 'https://wa.me/917383359679',
-      handle: '+91 7383359679',
+      url: whatsapp,
+      handle: phone,
       icon: MessageCircle,
       color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500 hover:text-black',
       badge: 'Fast Response'
     },
     {
       name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/baraiya-vishalbhai/',
+      url: linkedin,
       handle: 'in/baraiya-vishalbhai',
       icon: Linkedin,
       color: 'bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500 hover:text-white',
@@ -21,7 +35,7 @@ export const About = ({ profile }) => {
     },
     {
       name: 'Instagram',
-      url: 'https://www.instagram.com/mr_baraiya_32/',
+      url: instagram,
       handle: '@mr_baraiya_32',
       icon: Instagram,
       color: 'bg-pink-500/10 text-pink-400 border-pink-500/30 hover:bg-pink-500 hover:text-white',
@@ -85,10 +99,10 @@ export const About = ({ profile }) => {
             <span>Detailed Background & Credentials</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#F8FAFC]">
-            About Vishal Baraiya
+            About {name}
           </h2>
           <p className="text-sm sm:text-base text-[#F8FAFC]/75 max-w-2xl font-light leading-relaxed">
-            Full-stack developer, open-source contributor, and Computer Science student passionate about building scalable web applications, AI automation RAG pipelines, and cloud systems.
+            {bio}
           </p>
         </div>
 
@@ -133,15 +147,11 @@ export const About = ({ profile }) => {
         <div className="bg-[#0c0d14] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6">
           <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
             <Cpu className="w-5 h-5 text-[#15D8B3]" />
-            <span>Engineering Philosophy & Journey</span>
+            <span>Engineering Philosophy & Background</span>
           </h3>
           <div className="space-y-4 text-sm text-[#F8FAFC]/80 leading-relaxed font-light">
-            <p>
-              I am currently pursuing my <strong className="text-white font-semibold">B.Tech in Computer Science & Engineering</strong> at Darshan University with an outstanding <strong className="text-[#15D8B3] font-mono font-bold">9.24 / 10 CGPA</strong>. My software engineering journey combines deep algorithmic problem-solving with hands-on full-stack development using <strong className="text-white font-semibold">React 19, Next.js, Node.js, Express, ASP.NET Core, and MongoDB</strong>.
-            </p>
-            <p>
-              Beyond coursework, I actively contribute to major open-source ecosystems including <strong className="text-[#15D8B3] font-semibold">Webpack</strong> (where I have merged multiple documentation refactors migrating SCSS to Tailwind CSS) and serve as a Project Admin for <strong className="text-white font-semibold">Winter of Code Social (WoCS)</strong>. I qualified <strong className="text-[#15D8B3] font-mono font-bold">GATE 2026 CS (AIR 4226)</strong> and have solved over <strong className="text-white font-semibold">500+ LeetCode problems</strong> across Easy, Medium, and Hard difficulty levels.
-            </p>
+            <p>{aboutText1}</p>
+            <p>{aboutText2}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10 font-mono text-xs">
@@ -201,7 +211,7 @@ export const About = ({ profile }) => {
           </div>
         </div>
 
-        {/* NPTEL Certifications & Impact Metrics Bar */}
+        {/* NPTEL Certifications & Coursework Bar */}
         <div className="bg-[#0c0d14] border border-white/10 rounded-2xl p-8 space-y-6">
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#15D8B3]" />

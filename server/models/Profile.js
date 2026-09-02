@@ -25,7 +25,8 @@ const profileSchema = new mongoose.Schema({
   huggingfaceUrl: { type: String, default: 'https://huggingface.co/mr-baraiya' },
   twitterUrl: { type: String, default: 'https://x.com/baraiya1014' },
   youtubeUrl: { type: String, default: 'https://www.youtube.com/@Vi.685_junior' },
-  instagramUrl: { type: String, default: 'https://www.instagram.com/vishalbaraiya_1014/' },
+  instagramUrl: { type: String, default: 'https://www.instagram.com/mr_baraiya_32/' },
+  whatsappUrl: { type: String, default: 'https://wa.me/917383359679' },
 
   projectsCompleted: { type: String, default: '21+' },
   yearsExperience: { type: String, default: '2+' },
