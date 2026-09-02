@@ -297,11 +297,13 @@ export const publicFolderGalleryData = [
 const seedGalleryIfEmpty = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
-      await Gallery.deleteMany({});
-      await Gallery.insertMany(publicFolderGalleryData);
-      console.log('[MongoDB Gallery] Successfully synchronized certificates and YouTube videos into database!');
+      const count = await Gallery.countDocuments();
+      if (count === 0) {
+        await Gallery.insertMany(publicFolderGalleryData);
+        console.log('[MongoDB Gallery] Seeded certificates into database!');
+      }
     } catch (err) {
-      console.error('[MongoDB Gallery Seed Error]:', err);
+      console.error('[MongoDB Gallery Seed Error]:', err.message);
     }
   }
 };

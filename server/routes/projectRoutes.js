@@ -273,18 +273,20 @@ export const realProjectsData = [
 
 import { protectAdmin } from '../middleware/authMiddleware.js';
 
-// Seed or sync projects in MongoDB
+// Seed or sync projects in MongoDB only if empty
 const seedProjects = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
-      await Project.deleteMany({});
-      await Project.insertMany(realProjectsData.map(p => {
-        const { _id, ...rest } = p;
-        return rest;
-      }));
-      console.log('[MongoDB Projects] Successfully synchronized 22 local projects!');
+      const count = await Project.countDocuments();
+      if (count === 0) {
+        await Project.insertMany(realProjectsData.map(p => {
+          const { _id, ...rest } = p;
+          return rest;
+        }));
+        console.log('[MongoDB Projects] Seeded initial projects!');
+      }
     } catch (err) {
-      console.error('[MongoDB Projects Seed Error]:', err);
+      console.error('[MongoDB Projects Seed Error]:', err.message);
     }
   }
 };

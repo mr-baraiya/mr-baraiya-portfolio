@@ -15,23 +15,21 @@ export const LeetCodeStats = () => {
   useEffect(() => {
     const fetchLeetCode = async () => {
       try {
-        const res = await fetch('https://leetcode-stats-api.herokuapp.com/mr_baraiya');
+        const res = await fetch('https://alfa-leetcode-api.onrender.com/mr_baraiya/solved');
         if (res.ok) {
           const json = await res.json();
-          if (json.status === 'success' && json.totalSolved) {
-            setData({
-              totalSolved: json.totalSolved || 503,
+          if (json.solvedProblem) {
+            setData(prev => ({
+              ...prev,
+              totalSolved: json.solvedProblem || 503,
               easySolved: json.easySolved || 210,
               mediumSolved: json.mediumSolved || 245,
-              hardSolved: json.hardSolved || 48,
-              rating: 1582,
-              ranking: 'Top 15%',
-              acceptanceRate: json.acceptanceRate ? `${json.acceptanceRate}%` : '68.4%'
-            });
+              hardSolved: json.hardSolved || 48
+            }));
           }
         }
       } catch (err) {
-        // Fallback to verified 500+ solved metrics if API proxy rate-limited
+        // Silent fallback
       }
     };
 

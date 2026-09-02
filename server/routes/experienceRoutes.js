@@ -86,15 +86,17 @@ export const resumeExperienceData = [
   }
 ];
 
-// Seed or sync experience in database
+// Seed or sync experience in database only if empty
 const seedExperience = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
-      await Experience.deleteMany({});
-      await Experience.insertMany(resumeExperienceData);
-      console.log('[MongoDB Experience] Successfully synchronized resume education and experience entries!');
+      const count = await Experience.countDocuments();
+      if (count === 0) {
+        await Experience.insertMany(resumeExperienceData);
+        console.log('[MongoDB Experience] Seeded initial experience entries!');
+      }
     } catch (err) {
-      console.error('[MongoDB Experience Seed Error]:', err);
+      console.error('[MongoDB Experience Seed Error]:', err.message);
     }
   }
 };

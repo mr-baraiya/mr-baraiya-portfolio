@@ -62,13 +62,12 @@ router.get('/', async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
       let skills = await Skill.find();
-      if (skills.length === 0 || skills.length < 20) {
-        await Skill.deleteMany({});
+      if (skills.length === 0) {
         skills = await Skill.insertMany(resumeSkills.map(s => {
           const { _id, ...rest } = s;
           return rest;
         }));
-        console.log('[MongoDB Skills] Synchronized resume skills into database!');
+        console.log('[MongoDB Skills] Seeded resume skills into database!');
       }
       return res.json(skills);
     }
