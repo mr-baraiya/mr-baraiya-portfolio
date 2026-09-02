@@ -76,11 +76,14 @@ export const Gojo3DCanvas = () => {
       side: THREE.DoubleSide
     });
 
-    // 6. Load FBX 3D Model with URLModifier for .tga -> .tga.png redirect
+    // 6. Load FBX 3D Model with URLModifier redirecting textures to public folder
     const manager = new THREE.LoadingManager();
     manager.setURLModifier((url) => {
-      if (url.endsWith('.tga')) {
-        return url + '.png';
+      if (url.includes('Tex_Ride_FengHuang_01b_D_A') || url.includes('Tex_Ride_FengHuang_01a_D_A')) {
+        return '/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_D_A.tga.png';
+      }
+      if (url.includes('Tex_Ride_FengHuang_01') || url.endsWith('.tga') || url.endsWith('.tga.png')) {
+        return '/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_E.tga.png';
       }
       return url;
     });

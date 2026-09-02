@@ -58,44 +58,54 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ 
-        success: false, 
-        error: 'MongoDB database is not connected. Please set MONGO_URI in your Vercel Project Environment Variables.' 
+    const adminEmail = (process.env.ADMIN_ALERT_EMAIL || 'baraiyavishalbhai32@gmail.com').toLowerCase().trim();
+    const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
+    const inputUser = (username || '').toLowerCase().trim();
+
+    // If MongoDB is connected, attempt DB lookup
+    if (mongoose.connection.readyState === 1) {
+      const user = await User.findOne({
+        $or: [
+          { username: inputUser },
+          { email: inputUser }
+        ]
+      });
+
+      if (user) {
+        const isMatch = await user.comparePassword(password);
+        if (isMatch) {
+          const token = jwt.sign(
+            { id: user._id, username: user.username, email: user.email, role: user.role },
+            process.env.JWT_SECRET || 'mr_baraiya_secret_jwt_key_2026',
+            { expiresIn: '7d' }
+          );
+          return res.json({
+            success: true,
+            token,
+            user: { username: user.username, email: user.email, role: user.role }
+          });
+        }
+      }
+    }
+
+    // Fallback Admin authentication (if DB is disconnected or initial admin login)
+    if (
+      (inputUser === adminEmail || inputUser === 'admin' || inputUser === 'baraiyavishalbhai32@gmail.com') &&
+      password === adminPass
+    ) {
+      const token = jwt.sign(
+        { id: 'admin-fallback-id', username: adminEmail, email: adminEmail, role: 'admin' },
+        process.env.JWT_SECRET || 'mr_baraiya_secret_jwt_key_2026',
+        { expiresIn: '7d' }
+      );
+      return res.json({
+        success: true,
+        token,
+        user: { username: adminEmail, email: adminEmail, role: 'admin' }
       });
     }
 
-    // Query MongoDB for user by username or email
-    const user = await User.findOne({
-      $or: [
-        { username: username.toLowerCase().trim() },
-        { email: username.toLowerCase().trim() }
-      ]
-    });
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid username or password' });
-    }
-
-    // Verify password using bcryptjs method on User model
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid username or password' });
-    }
-
-    // Issue JWT token
-    const token = jwt.sign(
-      { id: user._id, username: user.username, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'mr_baraiya_secret_jwt_key_2026',
-      { expiresIn: '7d' }
-    );
-
-    return res.json({
-      success: true,
-      token,
-      user: { username: user.username, email: user.email, role: user.role }
-    });
-
+    return res.status(401).json({ success: false, error: 'Invalid username or password' });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ success: false, error: 'Server authentication error' });
