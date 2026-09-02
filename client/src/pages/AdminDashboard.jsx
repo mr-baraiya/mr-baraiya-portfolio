@@ -7,8 +7,9 @@ import {
   fetchSkills, addSkillApi, updateSkillApi, deleteSkillApi,
   fetchExperience, addExperienceApi, updateExperienceApi, deleteExperienceApi,
   fetchContactMessages, deleteContactMessage, fetchServerStatus, logoutAdmin,
-  uploadFileApi
+  uploadFileApi, changePasswordApi
 } from '../api/apiService';
+import { Lock, Key, Eye, EyeOff, ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -25,6 +26,53 @@ export const AdminDashboard = () => {
   const [skills, setSkills] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [messages, setMessages] = useState([]);
+
+  // Change Password Form State & Validation
+  const [changePasswordForm, setChangePasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordStatus, setPasswordStatus] = useState({ type: '', msg: '' });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordStatus({ type: '', msg: '' });
+
+    const { currentPassword, newPassword, confirmPassword } = changePasswordForm;
+
+    if (!currentPassword) {
+      setPasswordStatus({ type: 'error', msg: 'Current password is required.' });
+      return;
+    }
+    if (!newPassword || newPassword.length < 6) {
+      setPasswordStatus({ type: 'error', msg: 'New password must be at least 6 characters long.' });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordStatus({ type: 'error', msg: 'New password and confirm password do not match.' });
+      return;
+    }
+    if (currentPassword === newPassword) {
+      setPasswordStatus({ type: 'error', msg: 'New password must be different from your current password.' });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await changePasswordApi(changePasswordForm);
+      setPasswordStatus({ type: 'success', msg: res.message || 'Admin password updated successfully!' });
+      setChangePasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      notify('Admin password updated successfully in MongoDB database!');
+    } catch (err) {
+      setPasswordStatus({ type: 'error', msg: err.error || err.message || 'Failed to update password.' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // List Filter States
   const [galleryFilter, setGalleryFilter] = useState('ALL');
@@ -532,6 +580,17 @@ export const AdminDashboard = () => {
             }`}
           >
             Messages ({messages.length})
+          </button>
+          <button
+            onClick={() => { setActiveTab('security'); setPasswordStatus({ type: '', msg: '' }); }}
+            className={`py-3 px-4 md:px-5 text-xs md:text-sm font-mono font-bold border-b-2 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === 'security'
+                ? 'border-[#15D8B3] text-[#15D8B3]'
+                : 'border-transparent text-[#F8FAFC]/70 hover:text-white'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Security & Password</span>
           </button>
         </div>
 
@@ -1408,6 +1467,140 @@ export const AdminDashboard = () => {
                 ))}
               </div>
             )}
+          </div>
+        )}
+        {/* --- TAB 6: SECURITY & CHANGE ADMIN PASSWORD --- */}
+        {activeTab === 'security' && (
+          <div className="glass-card p-6 sm:p-8 border-[#49A4BB]/30 space-y-6 max-w-2xl mx-auto bg-[#050508] rounded-2xl shadow-2xl">
+            <div className="flex items-center gap-3 border-b border-[#49A4BB]/20 pb-4">
+              <div className="w-10 h-10 rounded-xl bg-[#15D8B3]/10 border border-[#15D8B3]/30 flex items-center justify-center text-[#15D8B3]">
+                <Key className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span>Change Admin Password</span>
+                  <ShieldCheck className="w-5 h-5 text-[#15D8B3]" />
+                </h2>
+                <p className="text-xs font-mono text-[#F8FAFC]/70">
+                  Update your admin account authentication password in MongoDB with old password validation
+                </p>
+              </div>
+            </div>
+
+            {/* Notification alert banners */}
+            {passwordStatus.msg && (
+              <div className={`p-4 rounded-xl border flex items-center gap-3 text-xs font-mono font-semibold animate-fadeIn ${
+                passwordStatus.type === 'error'
+                  ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                  : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+              }`}>
+                {passwordStatus.type === 'error' ? (
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                )}
+                <span>{passwordStatus.msg}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleChangePasswordSubmit} className="space-y-5">
+              
+              {/* 1. Current Password */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
+                  Current Password <span className="text-rose-400">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    required
+                    value={changePasswordForm.currentPassword}
+                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, currentPassword: e.target.value })}
+                    className="input-field pr-10"
+                    placeholder="Enter your current admin password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. New Password */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
+                  New Password <span className="text-rose-400">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    required
+                    minLength={6}
+                    value={changePasswordForm.newPassword}
+                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, newPassword: e.target.value })}
+                    className="input-field pr-10"
+                    placeholder="Minimum 6 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {changePasswordForm.newPassword && changePasswordForm.newPassword.length < 6 && (
+                  <p className="text-[10px] font-mono text-rose-400">Password must be at least 6 characters long.</p>
+                )}
+              </div>
+
+              {/* 3. Confirm New Password */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
+                  Confirm New Password <span className="text-rose-400">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    minLength={6}
+                    value={changePasswordForm.confirmPassword}
+                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, confirmPassword: e.target.value })}
+                    className="input-field pr-10"
+                    placeholder="Re-enter your new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {changePasswordForm.confirmPassword && changePasswordForm.newPassword !== changePasswordForm.confirmPassword && (
+                  <p className="text-[10px] font-mono text-rose-400">Passwords do not match.</p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-4 border-t border-[#49A4BB]/20 flex items-center justify-between gap-4">
+                <span className="text-[11px] font-mono text-[#F8FAFC]/60">
+                  Password changes update directly in MongoDB
+                </span>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-6 py-3 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-xs hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20 flex items-center gap-2"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>{loading ? 'Updating Password...' : 'Update Admin Password'}</span>
+                </button>
+              </div>
+
+            </form>
           </div>
         )}
 

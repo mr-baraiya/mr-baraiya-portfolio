@@ -63,6 +63,15 @@ export const resetPasswordApi = async (token, newPassword) => {
   }
 };
 
+export const changePasswordApi = async (passwordsData) => {
+  try {
+    const response = await axios.put(`${API_BASE}/auth/change-password`, passwordsData, getAuthHeaders());
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { success: false, error: 'Failed to change password' };
+  }
+};
+
 export const verifyAdminToken = async () => {
   try {
     const token = getAuthToken();

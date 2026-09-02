@@ -200,4 +200,57 @@ router.get('/verify', protectAdmin, (req, res) => {
   });
 });
 
+// PUT /api/auth/change-password — Change Admin Password (Protected)
+router.put('/change-password', protectAdmin, async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ success: false, error: 'All password fields are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, error: 'New password must be at least 6 characters long.' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ success: false, error: 'New password and confirm password do not match.' });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ success: false, error: 'New password must be different from current password.' });
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ success: false, error: 'MongoDB database connection unavailable.' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'Admin user account not found.' });
+    }
+
+    // Verify current password
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, error: 'Incorrect current password. Please check and try again.' });
+    }
+
+    // Update password (User pre-save hook will hash it)
+    user.password = newPassword;
+    await user.save();
+
+    console.log(`[MongoDB Auth] Password changed successfully for admin: ${user.username}`);
+
+    return res.json({
+      success: true,
+      message: 'Admin password changed successfully!'
+    });
+
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ success: false, error: 'Server error while changing password.' });
+  }
+});
+
 export default router;
