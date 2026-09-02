@@ -27,8 +27,6 @@ export const Gojo3DCanvas = () => {
 
     if (THREE.SRGBColorSpace) {
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-    } else {
-      renderer.outputEncoding = THREE.sRGBEncoding;
     }
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
