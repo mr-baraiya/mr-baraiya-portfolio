@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Eye, X, Layers, ArrowUpRight } from 'lucide-react';
+import { SkeletonGrid, SkeletonProjectCard } from './SkeletonLoader';
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80';
 
@@ -80,8 +81,11 @@ export const Projects = ({ projects = [] }) => {
         </div>
 
         {/* 5-Cards per Row Responsive Grid on Desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-          {filteredProjects.map((project) => (
+        {projects.length === 0 ? (
+          <SkeletonGrid count={5} Component={SkeletonProjectCard} gridClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5" />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {filteredProjects.map((project) => (
             <div
               key={project._id}
               onClick={() => setActiveModalProject(project)}
@@ -166,6 +170,7 @@ export const Projects = ({ projects = [] }) => {
             </div>
           ))}
         </div>
+        )}
 
       </div>
 

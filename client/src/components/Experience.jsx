@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, Briefcase, GraduationCap } from 'lucide-react';
+import { SkeletonGrid, SkeletonTimelineItem } from './SkeletonLoader';
 
 export const Experience = ({ experiences = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -60,8 +61,11 @@ export const Experience = ({ experiences = [] }) => {
         </div>
 
         {/* Timeline Container */}
-        <div className="max-w-5xl mx-auto relative pl-6 md:pl-8 space-y-10 before:absolute before:left-2 md:before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#15D8B3]">
-          {filteredExperiences.map((exp, index) => {
+        {experiences.length === 0 ? (
+          <SkeletonGrid count={4} Component={SkeletonTimelineItem} gridClassName="grid grid-cols-1 gap-6 max-w-4xl mx-auto" />
+        ) : (
+          <div className="max-w-5xl mx-auto relative pl-6 md:pl-8 space-y-10 before:absolute before:left-2 md:before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#15D8B3]">
+            {filteredExperiences.map((exp, index) => {
             const isEducation = (exp.type || '').toLowerCase() === 'education';
 
             return (
@@ -133,6 +137,7 @@ export const Experience = ({ experiences = [] }) => {
             );
           })}
         </div>
+        )}
 
       </div>
     </section>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, X, ArrowUpRight, FileText, Award, Play, Video } from 'lucide-react';
+import { SkeletonGrid, SkeletonGalleryCard } from './SkeletonLoader';
 
 const FALLBACK_GALLERY_IMAGE = '/img/wocs_2025_admin.png';
 
@@ -181,86 +182,79 @@ export const Gallery = ({ items = [] }) => {
           )}
 
           {/* Certificate Image Grid (5 Cards per Row on Desktop) */}
-          {certGridItems.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-              {visibleCertGridItems.map((item) => {
-                const documentUrl = item.pdfUrl || item.credentialUrl;
+          {items.length === 0 ? (
+            <SkeletonGrid count={5} Component={SkeletonGalleryCard} gridClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5" />
+          ) : (
+            certGridItems.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
+                {visibleCertGridItems.map((item) => {
+                  const documentUrl = item.pdfUrl || item.credentialUrl;
 
-                return (
-                  <div
-                    key={item._id}
-                    className="group bg-[#050508] border border-[#49A4BB]/30 rounded-xl overflow-hidden flex flex-col hover:border-[#15D8B3] hover:-translate-y-1 transition-all duration-300 shadow-xl justify-between"
-                  >
-                    {/* Image Container */}
+                  return (
                     <div
-                      onClick={() => setActiveModalItem(item)}
-                      className="relative aspect-[16/10] bg-[#050814] p-4 flex items-center justify-center border-b border-[#49A4BB]/20 cursor-pointer overflow-hidden"
+                      key={item._id}
+                      className="group bg-[#050508] border border-[#49A4BB]/30 rounded-xl overflow-hidden flex flex-col hover:border-[#15D8B3] hover:-translate-y-1 transition-all duration-300 shadow-xl justify-between"
                     >
-                      <img
-                        src={item.image || FALLBACK_GALLERY_IMAGE}
-                        alt={item.title}
-                        loading="lazy"
-                        onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_GALLERY_IMAGE; }}
-                        className="max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
+                      {/* Image Container */}
+                      <div
+                        onClick={() => setActiveModalItem(item)}
+                        className="relative aspect-[16/10] bg-[#050814] p-4 flex items-center justify-center border-b border-[#49A4BB]/20 cursor-pointer overflow-hidden"
+                      >
+                        <img
+                          src={item.image || FALLBACK_GALLERY_IMAGE}
+                          alt={item.title}
+                          loading="lazy"
+                          onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_GALLERY_IMAGE; }}
+                          className="max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
 
-                      <div className="absolute top-3 left-3">
-                        <span className="px-2.5 py-0.5 rounded-full bg-[#050508]/90 text-[10px] font-mono font-semibold text-[#15D8B3] border border-[#15D8B3]/40 backdrop-blur-md">
-                          {item.category}
-                        </span>
+                        <div className="absolute top-3 left-3">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#050508]/90 text-[10px] font-mono font-semibold text-[#15D8B3] border border-[#15D8B3]/40 backdrop-blur-md">
+                            {item.category}
+                          </span>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Card Content */}
-                    <div className="p-4 flex flex-col flex-grow justify-between space-y-3">
-                      <div className="space-y-1">
-                        <div className="text-[11px] font-mono font-semibold text-[#15D8B3]">
-                          {item.issuer} · {item.date}
+                      {/* Card Content */}
+                      <div className="p-4 flex flex-col flex-grow justify-between space-y-3">
+                        <div className="space-y-1">
+                          <div className="text-[11px] font-mono font-semibold text-[#15D8B3]">
+                            {item.issuer} · {item.date}
+                          </div>
+
+                          <h4 className="text-xs font-bold text-[#F8FAFC] group-hover:text-[#15D8B3] transition-colors leading-snug line-clamp-2">
+                            {item.title}
+                          </h4>
                         </div>
 
-                        <h4 className="text-xs font-bold text-[#F8FAFC] group-hover:text-[#15D8B3] transition-colors leading-snug line-clamp-2">
-                          {item.title}
-                        </h4>
-                      </div>
-
-                      {/* Action Link */}
-                      <div className="pt-2 border-t border-[#49A4BB]/20 flex items-center justify-between">
-                        <button
-                          onClick={() => setActiveModalItem(item)}
-                          className="inline-flex items-center gap-1 text-xs font-mono font-bold text-[#F8FAFC] hover:text-[#15D8B3] transition-colors cursor-pointer"
-                        >
-                          <span>View Certificate</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-[#15D8B3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                        </button>
-
-                        {documentUrl && documentUrl !== '#' && (
-                          <a
-                            href={documentUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-1 rounded bg-[#050508] border border-[#49A4BB]/30 text-[#F8FAFC]/70 hover:text-[#15D8B3] hover:border-[#15D8B3] transition-colors"
-                            title="Open Document"
+                        {/* Action Link */}
+                        <div className="pt-2 border-t border-[#49A4BB]/20 flex items-center justify-between">
+                          <button
+                            onClick={() => setActiveModalItem(item)}
+                            className="inline-flex items-center gap-1 text-xs font-mono font-bold text-[#F8FAFC] hover:text-[#15D8B3] transition-colors cursor-pointer"
                           >
-                            <ExternalLink className="w-3 h-3 text-[#15D8B3]" />
-                          </a>
-                        )}
+                            <span>View Certificate</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-[#15D8B3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          </button>
+
+                          {documentUrl && documentUrl !== '#' && (
+                            <a
+                              href={documentUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-1 rounded bg-[#050508] border border-[#49A4BB]/30 text-[#F8FAFC]/70 hover:text-[#15D8B3] hover:border-[#15D8B3] transition-colors"
+                              title="Open Document"
+                            >
+                              <ExternalLink className="w-3 h-3 text-[#15D8B3]" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {certGridItems.length > INITIAL_GRID_COUNT && (
-            <div className="text-center">
-              <button
-                onClick={() => setShowAllCertificates(!showAllCertificates)}
-                className="px-8 py-3 rounded-lg bg-[#050814] border border-[#49A4BB]/30 hover:border-[#15D8B3] text-xs font-mono font-bold text-[#F8FAFC] hover:text-[#15D8B3] transition-all duration-300 cursor-pointer tracking-wider shadow-lg"
-              >
-                {showAllCertificates ? 'Show Less Certificates' : `View All Certificates (${certGridItems.length + 1})`}
-              </button>
-            </div>
+                  );
+                })}
+              </div>
+            )
           )}
         </div>
 

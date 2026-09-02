@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Cpu, Cloud, Database } from 'lucide-react';
+import { SkeletonGrid, SkeletonSkillCard } from './SkeletonLoader';
 import {
   SiJavascript, SiTypescript, SiPython, SiDotnet, SiC,
   SiReact, SiNextdotjs, SiTailwindcss, SiBootstrap,
@@ -121,8 +122,11 @@ export const Skills = ({ skills = [] }) => {
         </div>
 
         {/* 5-Cards per Row Responsive Grid with Official Tech Brand Icons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-          {filteredSkills.map((skill, index) => (
+        {skills.length === 0 ? (
+          <SkeletonGrid count={5} Component={SkeletonSkillCard} gridClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5" />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
+            {filteredSkills.map((skill, index) => (
             <div
               key={skill._id || index}
               className="bg-[#050508] border border-[#49A4BB]/30 rounded-xl p-5 hover:border-[#15D8B3] hover:-translate-y-1 transition-all duration-300 shadow-lg space-y-3 group flex flex-col justify-between"
@@ -149,10 +153,10 @@ export const Skills = ({ skills = [] }) => {
                   {skill.description || `Specialized technical proficiency in ${skill.name}.`}
                 </p>
               </div>
-
             </div>
           ))}
         </div>
+        )}
 
       </div>
     </section>
