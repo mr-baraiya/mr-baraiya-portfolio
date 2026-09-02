@@ -12,9 +12,13 @@ const PUBLIC_DIR = path.resolve('../client/public');
 const PDF_DIR = path.join(PUBLIC_DIR, 'pdf');
 const IMG_DIR = path.join(PUBLIC_DIR, 'img');
 
-// Ensure directories exist
-if (!fs.existsSync(PDF_DIR)) fs.mkdirSync(PDF_DIR, { recursive: true });
-if (!fs.existsSync(IMG_DIR)) fs.mkdirSync(IMG_DIR, { recursive: true });
+// Ensure directories exist safely without crashing serverless environments
+try {
+  if (!fs.existsSync(PDF_DIR)) fs.mkdirSync(PDF_DIR, { recursive: true });
+  if (!fs.existsSync(IMG_DIR)) fs.mkdirSync(IMG_DIR, { recursive: true });
+} catch (err) {
+  console.warn('[Serverless Storage Warning] Upload directory creation skipped in read-only environment.');
+}
 
 // Configure Multer Storage
 const storage = multer.diskStorage({
