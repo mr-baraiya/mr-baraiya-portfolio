@@ -2,6 +2,11 @@
 
 Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Express.js, and MongoDB. Showcases production projects, open-source Webpack contributions, GitHub live activity, LeetCode metrics, and academic history.
 
+## Live Production Deployments
+
+- Frontend Website: https://mr-baraiya-portfolio.vercel.app
+- Backend REST API Engine: https://mr-baraiya-portfolio-server.vercel.app/api
+
 ## Features
 
 - Dynamic Featured Projects showcase (AgroSmart, MOMS, Weather Notify AI, ImpactMeter).
@@ -17,7 +22,7 @@ Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Exp
 - Frontend: React 19, Vite, Tailwind CSS, React Router DOM, Lucide Icons, Three.js
 - Backend: Node.js, Express.js, Mongoose, JWT, Nodemailer, bcryptjs
 - Database: MongoDB Atlas / Local MongoDB
-- Deployment: Vercel / Netlify (Client), Render / Railway (Server)
+- Deployment: Vercel (Frontend & Serverless Backend API)
 
 ## Environment Variables
 
@@ -27,15 +32,15 @@ Set up a `.env` file in the `server` directory:
 
 ```env
 PORT=5000
-NODE_ENV=development
-MONGO_URI=mongodb://127.0.0.1:27017/portfolio_db
-CLIENT_URL=http://localhost:5173
+NODE_ENV=production
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.r4bt2.mongodb.net/portfolio_db
+CLIENT_URL=https://mr-baraiya-portfolio.vercel.app
 JWT_SECRET=your_jwt_secret_key_here
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
+SMTP_USER=baraiyavishalbhai32@gmail.com
 SMTP_PASS=your_app_password
-ADMIN_ALERT_EMAIL=your_email@gmail.com
+ADMIN_ALERT_EMAIL=baraiyavishalbhai32@gmail.com
 ```
 
 ### Client (`client/.env`)
@@ -43,7 +48,7 @@ ADMIN_ALERT_EMAIL=your_email@gmail.com
 Set up a `.env` file in the `client` directory:
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://mr-baraiya-portfolio-server.vercel.app/api
 ```
 
 ## Local Installation & Setup
