@@ -38,9 +38,9 @@ CLIENT_URL=https://mr-baraiya-portfolio.vercel.app
 JWT_SECRET=your_jwt_secret_key_here
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=baraiyavishalbhai32@gmail.com
+SMTP_USER=your_email@gmail.com
 SMTP_PASS=your_app_password
-ADMIN_ALERT_EMAIL=baraiyavishalbhai32@gmail.com
+ADMIN_ALERT_EMAIL=your_email@gmail.com
 ```
 
 ### Client (`client/.env`)
