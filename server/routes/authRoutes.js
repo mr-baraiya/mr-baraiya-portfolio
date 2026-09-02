@@ -52,7 +52,17 @@ router.post('/login', async (req, res) => {
     }
 
     if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ success: false, error: 'MongoDB database is connecting or unavailable.' });
+      const connected = await connectDB();
+      if (connected) {
+        await initAdminUser();
+      }
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ 
+        success: false, 
+        error: 'MongoDB database is not connected. Please set MONGO_URI in your Vercel Project Environment Variables.' 
+      });
     }
 
     // Query MongoDB for user by username or email
