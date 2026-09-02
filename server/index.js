@@ -72,10 +72,10 @@ app.get('/', (req, res) => {
   });
 });
 
-// Connect DB & Start Server
-const startServer = async () => {
-  await connectDB();
-  await initAdminUser();
+// Connect DB & Init Admin User
+connectDB().then(() => initAdminUser());
+
+if (!process.env.VERCEL) {
   const server = app.listen(PORT, () => {
     console.log(`[Express Server] Server running on http://localhost:${PORT}`);
     console.log(`[CORS] Enabled origin from .env:`, clientUrl);
@@ -89,6 +89,6 @@ const startServer = async () => {
       console.error('[Server Error]', err);
     }
   });
-};
+}
 
-startServer();
+export default app;
