@@ -13,6 +13,7 @@ import AchievementsPage from './pages/AchievementsPage';
 import GalleryPage from './pages/GalleryPage';
 import ContactPage from './pages/ContactPage';
 import OpenSourcePRsPage from './pages/OpenSourcePRsPage';
+import ApiDocsPage from './pages/ApiDocsPage';
 
 import AdminLogin from './pages/AdminLogin';
 import AdminForgotPassword from './pages/AdminForgotPassword';
@@ -95,6 +96,8 @@ export function App() {
                     <Route path="/gallery" element={<GalleryPage galleryItems={galleryItems} />} />
                     <Route path="/open-source" element={<OpenSourcePRsPage />} />
                     <Route path="/pull-requests" element={<OpenSourcePRsPage />} />
+                    <Route path="/api-docs" element={<ApiDocsPage />} />
+                    <Route path="/api-info" element={<ApiDocsPage />} />
                     <Route
                       path="/contact"
                       element={<ContactPage profile={profile} loadData={loadData} />}

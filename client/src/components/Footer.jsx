@@ -58,6 +58,8 @@ export const Footer = ({ profileData = {} }) => {
     { label: 'Journey', path: '/journey' },
     { label: 'Achievements', path: '/achievements' },
     { label: 'Gallery', path: '/gallery' },
+    { label: 'Open Source', path: '/open-source' },
+    { label: 'API Docs', path: '/api-docs' },
     { label: 'Contact', path: '/contact' },
   ];
 
