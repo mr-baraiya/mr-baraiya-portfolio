@@ -1437,6 +1437,11 @@ export const AdminDashboard = () => {
                     >
                       <option value="Work">Work Experience</option>
                       <option value="Education">Education</option>
+                      <option value="Learning">Learning & Foundations</option>
+                      <option value="Projects">Full-Stack Projects</option>
+                      <option value="Open Source">Open Source</option>
+                      <option value="DSA">DSA & Competitive Programming</option>
+                      <option value="Current">Current Focus</option>
                     </select>
                   </div>
                 </div>

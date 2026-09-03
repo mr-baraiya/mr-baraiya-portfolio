@@ -1,13 +1,122 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin, Briefcase, GraduationCap, Award, CheckCircle2 } from 'lucide-react';
+import { 
+  Calendar, 
+  MapPin, 
+  Briefcase, 
+  GraduationCap, 
+  BookOpen, 
+  Layers, 
+  GitMerge, 
+  Award, 
+  Rocket, 
+  CheckCircle2 
+} from 'lucide-react';
+
+const PROGRESSION_STEPS = [
+  {
+    _id: 'prog-1',
+    category: 'Learning',
+    role: 'Learning & CS Foundations',
+    company: 'Darshan University & Self-Taught',
+    period: '2022 — 2023',
+    location: 'Rajkot, India',
+    type: 'Learning',
+    badge: 'Phase 1: Foundations',
+    icon: BookOpen,
+    description: "Built strong core computer science foundations in C, C++, Data Structures, Object-Oriented Programming, and Web Fundamentals. Maintained top academic performance with a 9.24 CGPA.",
+    highlights: [
+      "Mastered C, C++, and core Data Structures & Algorithms concepts",
+      "Built clean HTML5, CSS3, and JavaScript web interfaces from scratch",
+      "Achieved 9.24 CGPA in B.Tech Computer Science at Darshan University"
+    ],
+    skills: ['C/C++', 'OOP', 'Data Structures', 'HTML/CSS/JS', '9.24 CGPA']
+  },
+  {
+    _id: 'prog-2',
+    category: 'Projects',
+    role: 'Full-Stack Engineering & Production Systems',
+    company: 'Independent & Academic Projects',
+    period: '2023 — 2024',
+    location: 'Gujarat, India',
+    type: 'Projects',
+    badge: 'Phase 2: Full-Stack',
+    icon: Layers,
+    description: "Transitioned from fundamentals to building real-world full-stack web applications and REST APIs. Architected 20+ production-grade applications including AgroSmart, MOMS, and Weather Notify AI.",
+    highlights: [
+      "Engineered 20+ full-stack web applications with React, Node.js, Express & MongoDB",
+      "Architected REST APIs, JWT authentication, and Vercel Blob CDN asset storage",
+      "Built AgroSmart, MOMS, and Weather Notify AI with modern UI/UX"
+    ],
+    skills: ['React', 'Node.js', 'Express', 'MongoDB', 'ASP.NET Core', 'Python']
+  },
+  {
+    _id: 'prog-3',
+    category: 'Open Source',
+    role: 'Open Source Contributor',
+    company: 'Webpack & Developer Ecosystem',
+    period: '2024 — 2025',
+    location: 'Global Open Source',
+    type: 'Open Source',
+    badge: 'Phase 3: Open Source',
+    icon: GitMerge,
+    description: "Stepped into international open-source development by contributing code and fixes to the Webpack core ecosystem. Published npm utility packages and collaborated with global maintainers.",
+    highlights: [
+      "Merged official Pull Requests in the Webpack CLI repository",
+      "Published npm utility libraries for full-stack developers",
+      "Engaged in open-source code reviews and modular architecture design"
+    ],
+    skills: ['Webpack', 'JavaScript', 'NPM Package', 'Git', 'Open Source']
+  },
+  {
+    _id: 'prog-4',
+    category: 'DSA',
+    role: 'DSA & GATE 2026 CS Ranker',
+    company: 'LeetCode & GATE CS',
+    period: '2025 — 2026',
+    location: 'India',
+    type: 'DSA',
+    badge: 'Phase 4: Algorithmic Mastery',
+    icon: Award,
+    description: "Focused on deep algorithmic mastery, data structure optimization, and competitive programming. Qualified GATE 2026 Computer Science with All India Rank 4226 and solved 500+ LeetCode problems.",
+    highlights: [
+      "Qualified GATE 2026 CS with All India Rank 4226",
+      "Solved 500+ LeetCode algorithm problems across Dynamic Programming, Graphs & Trees",
+      "Cleared TCS CodeVita Season 12 Competitive Programming Round"
+    ],
+    skills: ['GATE 2026 AIR 4226', '500+ LeetCode', 'Algorithms', 'TCS CodeVita']
+  },
+  {
+    _id: 'prog-5',
+    category: 'Current',
+    role: 'Full-Stack Software Engineer',
+    company: 'Seeking Full-Time Roles',
+    period: '2026 — Present',
+    location: 'Open to Remote / On-Site',
+    type: 'Current',
+    badge: 'Phase 5: Current & Beyond',
+    icon: Rocket,
+    description: "Actively building high-scale full-stack web applications, CDN asset pipelines, and interactive 3D WebGL experiences. Ready to contribute to engineering teams as a Full-Stack / Software Engineer.",
+    highlights: [
+      "Building high-performance MERN & ASP.NET web applications",
+      "Integrated Vercel Blob CDN & PyMuPDF automatic PDF cover screenshot pipeline",
+      "Actively interviewing and open for Software Engineering & Full-Stack roles"
+    ],
+    skills: ['Software Engineer', 'Full-Stack', 'REST APIs', 'Cloud CDN', 'System Design']
+  }
+];
 
 export const JourneyPage = ({ experiences = [] }) => {
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('PROGRESSION');
 
-  const categories = ['ALL', 'WORK', 'EDUCATION'];
+  const categories = [
+    { key: 'PROGRESSION', label: 'Progression Pipeline' },
+    { key: 'ALL', label: 'All Journey Entries' },
+    { key: 'WORK', label: 'Work Experience' },
+    { key: 'EDUCATION', label: 'Education & Ranks' }
+  ];
 
-  // Full Rich Journey Entries (Combining DB experience data + explicit Academic Education & Competitive Honors)
   const fullJourneyEntries = [
+    ...PROGRESSION_STEPS,
     {
       _id: 'work_ta',
       type: 'Work',
@@ -39,21 +148,6 @@ export const JourneyPage = ({ experiences = [] }) => {
       skills: ['Algorithmic Trading', 'React.js', 'Node.js', 'System Architecture', 'Team Leadership']
     },
     {
-      _id: 'work_wocs',
-      type: 'Work',
-      role: 'Project Admin & Open Source Contributor',
-      company: 'Winter of Code Social (WoCS) & Webpack',
-      location: 'Open Source Community',
-      period: '2025',
-      badge: 'Open Source Leadership',
-      description: 'Managed open-source software repositories, reviewed pull requests, and contributed code to Webpack ecosystem.',
-      highlights: [
-        'Served as Project Admin for WoCS 2025, guiding student contributors through Git workflows and code reviews.',
-        'Contributed bug fixes to Webpack core ecosystem and completed Hacktoberfest 2025 challenge.'
-      ],
-      skills: ['JavaScript', 'Webpack', 'Git / GitHub', 'Code Reviews', 'Open Source']
-    },
-    {
       _id: 'edu_btech',
       type: 'Education',
       role: 'B.Tech in Computer Science & Engineering',
@@ -67,57 +161,14 @@ export const JourneyPage = ({ experiences = [] }) => {
         'Coursework: Data Structures & Algorithms, Database Systems (SQL/NoSQL), Operating Systems, Web Engineering, ASP.NET Core, Machine Learning.'
       ],
       skills: ['CGPA: 9.24 / 10', 'Data Structures', 'DBMS', 'OS', 'Full-Stack Engineering']
-    },
-    {
-      _id: 'edu_gate',
-      type: 'Education',
-      role: 'GATE 2026 CS Qualified (AIR 4226)',
-      company: 'IIT Roorkee / GATE 2026 Organising Institute',
-      location: 'National Competitive Exam',
-      period: 'Feb 2026',
-      badge: 'Competitive Exam Rank',
-      description: 'Qualified Graduate Aptitude Test in Engineering (GATE 2026) in Computer Science & Information Technology on 1st attempt.',
-      highlights: [
-        'Secured All India Rank AIR 4226 with GATE Score of 48.34 / 100.',
-        'Demonstrated mastery in Computer Architecture, Theory of Computation, Algorithms, Compiler Design, and Operating Systems.'
-      ],
-      skills: ['AIR 4226', 'GATE Score: 48.34', 'Algorithms', 'Computer Science Theory']
-    },
-    {
-      _id: 'edu_hsc',
-      type: 'Education',
-      role: 'Higher Secondary Certificate (HSC - Class 12)',
-      company: 'Gujarat Secondary and Higher Secondary Education Board (GSEB)',
-      location: 'Gujarat, India',
-      period: '2021 – 2023',
-      badge: 'Science Stream',
-      description: 'Completed Higher Secondary Education focusing on Mathematics, Physics, and Chemistry (PCM).',
-      highlights: [
-        'Achieved 94.5 Percentile Rank (PR) in JEE Main competitive entrance exam.',
-        'Built strong logical and mathematical problem-solving foundation.'
-      ],
-      skills: ['PCM Science', 'JEE Main 94.5 PR', 'Mathematics']
-    },
-    {
-      _id: 'edu_ssc',
-      type: 'Education',
-      role: 'Secondary School Certificate (SSC - Class 10)',
-      company: 'Gujarat Secondary and Higher Secondary Education Board (GSEB)',
-      location: 'Gujarat, India',
-      period: '2020 – 2021',
-      badge: 'Academic Distinction',
-      description: 'Completed Secondary School Education with top academic distinction.',
-      highlights: [
-        'Secured 85.00% overall score in GSEB Board Examinations.'
-      ],
-      skills: ['85.00% Score', 'Academic Merit']
     }
   ];
 
-  // Filter logic
-  const filteredEntries = selectedCategory === 'ALL'
-    ? fullJourneyEntries
-    : fullJourneyEntries.filter(entry => entry.type.toUpperCase() === selectedCategory);
+  const filteredEntries = selectedCategory === 'PROGRESSION'
+    ? PROGRESSION_STEPS
+    : (selectedCategory === 'ALL' 
+        ? fullJourneyEntries 
+        : fullJourneyEntries.filter(entry => (entry.type || '').toUpperCase() === selectedCategory));
 
   return (
     <div className="pt-28 pb-24 bg-[#050508] text-[#F8FAFC] min-h-screen">
@@ -126,10 +177,10 @@ export const JourneyPage = ({ experiences = [] }) => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold text-[#15D8B3]">Career & Education History</span>
-            <h1 className="text-3xl font-extrabold text-[#F8FAFC]">My Professional & Academic Journey</h1>
+            <span className="text-xs font-mono font-bold text-[#15D8B3]">Developer Progression & Career Timeline</span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#F8FAFC]">My Developer Journey</h1>
             <p className="text-xs sm:text-sm text-[#F8FAFC]/75 font-light max-w-2xl">
-              A comprehensive chronological timeline merging software engineering work experience, teaching assistant leadership, hackathon runner-up awards, academic degrees, and competitive ranks.
+              From early programming fundamentals to full-stack production apps, open-source contributions, GATE CS ranking, and software engineering.
             </p>
           </div>
 
@@ -137,15 +188,15 @@ export const JourneyPage = ({ experiences = [] }) => {
           <div className="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
             {categories.map((cat) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={cat.key}
+                onClick={() => setSelectedCategory(cat.key)}
                 className={`px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 whitespace-nowrap cursor-pointer ${
-                  selectedCategory === cat
+                  selectedCategory === cat.key
                     ? 'bg-[#15D8B3] text-[#050508] font-bold shadow-md'
                     : 'bg-[#0c0d14] text-[#F8FAFC]/75 border border-[#49A4BB]/20 hover:border-[#15D8B3] hover:text-[#15D8B3]'
                 }`}
               >
-                {cat === 'ALL' ? 'All Journey Entries' : cat === 'WORK' ? 'Work Experience' : 'Education & Ranks'}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -158,18 +209,57 @@ export const JourneyPage = ({ experiences = [] }) => {
               className="w-full px-4 py-2.5 rounded-lg bg-[#0c0d14] text-[#15D8B3] border border-[#15D8B3]/50 text-xs font-mono font-bold outline-none cursor-pointer"
             >
               {categories.map((cat) => (
-                <option key={cat} value={cat} className="bg-[#050508] text-[#F8FAFC]">
-                  {cat === 'ALL' ? 'All Journey Entries' : cat === 'WORK' ? 'Work Experience' : 'Education & Ranks'}
+                <option key={cat.key} value={cat.key} className="bg-[#050508] text-[#F8FAFC]">
+                  {cat.label}
                 </option>
               ))}
             </select>
           </div>
         </div>
 
+        {/* Progression Roadmap Pipeline Banner */}
+        <div className="bg-[#0c0d14] border border-[#15D8B3]/30 rounded-2xl p-4 sm:p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-mono font-bold text-[#15D8B3] uppercase tracking-wider flex items-center gap-2">
+              <Rocket className="w-4 h-4 text-[#15D8B3]" />
+              Progression Milestone Map
+            </span>
+            <span className="text-xs font-mono text-[#F8FAFC]/50 hidden sm:inline">
+              Learning → Projects → Open Source → DSA → Current
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {PROGRESSION_STEPS.map((step, idx) => {
+              const IconComp = step.icon;
+              return (
+                <button
+                  key={step._id}
+                  onClick={() => setSelectedCategory('PROGRESSION')}
+                  className="flex flex-col items-center justify-center p-3 rounded-xl border border-[#49A4BB]/20 bg-[#050508]/60 hover:border-[#15D8B3] transition-all text-center cursor-pointer"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#15D8B3]/10 border border-[#15D8B3]/40 flex items-center justify-center mb-2">
+                    <IconComp className="w-4 h-4 text-[#15D8B3]" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-[#15D8B3] mb-0.5">
+                    Step 0{idx + 1}
+                  </span>
+                  <span className="text-xs font-bold truncate max-w-full">
+                    {step.category}
+                  </span>
+                  <span className="text-[10px] text-[#F8FAFC]/50 font-mono mt-1">
+                    {step.period}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Timeline Container */}
         <div className="max-w-4xl mx-auto relative pl-6 md:pl-8 space-y-10 before:absolute before:left-2 md:before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#15D8B3]">
           {filteredEntries.map((item, index) => {
-            const isEducation = item.type.toLowerCase() === 'education';
+            const isEducation = (item.type || '').toLowerCase() === 'education';
 
             return (
               <div key={item._id || index} className="relative group">
@@ -189,7 +279,7 @@ export const JourneyPage = ({ experiences = [] }) => {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#15D8B3]/10 text-[#15D8B3] border border-[#15D8B3]/30 uppercase tracking-wider">
-                          {item.badge}
+                          {item.badge || item.category || item.type}
                         </span>
                       </div>
 
@@ -207,10 +297,12 @@ export const JourneyPage = ({ experiences = [] }) => {
                         <Calendar className="w-3.5 h-3.5 text-[#15D8B3]" />
                         {item.period}
                       </span>
-                      <span className="flex items-center gap-1.5 text-[#F8FAFC]/60">
-                        <MapPin className="w-3.5 h-3.5 text-[#49A4BB]" />
-                        {item.location}
-                      </span>
+                      {item.location && (
+                        <span className="flex items-center gap-1.5 text-[#F8FAFC]/60">
+                          <MapPin className="w-3.5 h-3.5 text-[#49A4BB]" />
+                          {item.location}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -239,7 +331,7 @@ export const JourneyPage = ({ experiences = [] }) => {
                     <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/5">
                       {item.skills.map((s, sIdx) => (
                         <span key={sIdx} className="px-2.5 py-1 rounded bg-[#050508] border border-white/10 text-[11px] font-mono text-[#15D8B3]">
-                          {s}
+                          #{s}
                         </span>
                       ))}
                     </div>
