@@ -1,6 +1,6 @@
 # Mr. Baraiya - Software Engineering Portfolio
 
-Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Express.js, MongoDB Atlas, and Vercel Blob Storage. Features a dynamic 3D Phoenix canvas representing engineering resilience and struggle, 22+ production projects, open-source Webpack contributions, GATE 2026 CS credentials, and a secure Admin Dashboard.
+Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Express.js, MongoDB Atlas, and Vercel Blob Storage. Features a dynamic 3D Phoenix canvas representing engineering resilience and struggle, 22+ production projects, open-source Webpack contributions, GATE 2026 CS credentials, a 5-step Developer Progression Timeline, and a secure Admin Dashboard.
 
 ## Live Production Deployments
 
@@ -10,6 +10,7 @@ Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Exp
 ## Features
 
 - **3D Phoenix Canvas**: Dynamic Three.js Phoenix model symbolizing resilience, overcoming engineering struggles, and continuous rebirth through code.
+- **Developer Progression Timeline**: 5-stage interactive journey (Learning → Projects → Open Source → DSA → Current).
 - **Vercel Blob Storage CDN**: All project cover images, hackathon certificates, and PDF resume documents are hosted on Vercel Blob CDN for high-speed delivery.
 - **Automated PDF Cover Screenshot Generation**: Server automatically renders Page 1 of uploaded PDF certificates into crisp PNG cover images using PyMuPDF.
 - **Interactive Admin Dashboard**: Full content management for Projects, Certificates & Hackathons, Skills, Experience, and Profile with direct image/PDF uploaders and live `👁️` Eye preview buttons.
@@ -73,6 +74,10 @@ npm run dev
 ```
 
 4. Open `http://localhost:5173` in your browser.
+
+## Credits & Acknowledgments
+
+Special shoutout and thanks to [Sketchfab](https://sketchfab.com) for hosting incredible 3D models and creators! The 3D Phoenix model featured on the Hero section canvas is powered by 3D assets from Sketchfab.
 
 ## License
 
