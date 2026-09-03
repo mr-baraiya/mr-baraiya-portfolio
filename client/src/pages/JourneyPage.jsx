@@ -74,38 +74,6 @@ export const JourneyPage = ({ experiences = [] }) => {
           </div>
         </div>
 
-        {/* Progression Roadmap Pipeline Banner */}
-        <div className="bg-[#0c0d14] border border-[#15D8B3]/30 rounded-2xl p-4 sm:p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-mono font-bold text-[#15D8B3] uppercase tracking-wider flex items-center gap-2">
-              <Rocket className="w-4 h-4 text-[#15D8B3]" />
-              Database Journey Timeline
-            </span>
-            <span className="text-xs font-mono text-[#F8FAFC]/50 hidden sm:inline">
-              Work &amp; Academic Milestones
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {dbExperiences.slice(0, 4).map((step, idx) => (
-              <div
-                key={step._id || idx}
-                className="flex flex-col items-center justify-center p-3 rounded-xl border border-[#49A4BB]/20 bg-[#050508]/60 text-center"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#15D8B3]/10 border border-[#15D8B3]/40 flex items-center justify-center mb-2 font-mono font-bold text-xs text-[#15D8B3]">
-                  0{idx + 1}
-                </div>
-                <span className="text-xs font-bold truncate max-w-full text-white">
-                  {step.type || 'Milestone'}
-                </span>
-                <span className="text-[10px] text-[#F8FAFC]/50 font-mono mt-1 truncate max-w-full">
-                  {step.period}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Timeline Container */}
         <div className="max-w-4xl mx-auto relative pl-6 md:pl-8 space-y-10 before:absolute before:left-2 md:before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#15D8B3]">
           {filteredEntries.map((item, index) => {
