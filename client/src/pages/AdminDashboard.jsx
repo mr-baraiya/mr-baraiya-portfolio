@@ -130,7 +130,7 @@ export const AdminDashboard = () => {
 
   const [projectForm, setProjectForm] = useState({
     title: '', description: '', longDescription: '', category: 'Full-Stack',
-    image: '', techStack: 'React, Node.js, MongoDB', githubUrl: '', liveUrl: ''
+    image: '', techStack: 'React, Node.js, MongoDB', githubUrl: '', liveUrl: '', featured: false
   });
 
   const [skillForm, setSkillForm] = useState({
@@ -342,7 +342,7 @@ export const AdminDashboard = () => {
       setEditingProject(null);
       setProjectForm({
         title: '', description: '', longDescription: '', category: 'Full-Stack',
-        image: '', techStack: 'React, Node.js, MongoDB', githubUrl: '', liveUrl: ''
+        image: '', techStack: 'React, Node.js, MongoDB', githubUrl: '', liveUrl: '', featured: false
       });
       loadAllData();
     } catch (err) {
@@ -360,7 +360,8 @@ export const AdminDashboard = () => {
       image: p.image,
       techStack: Array.isArray(p.techStack) ? p.techStack.join(', ') : p.techStack,
       githubUrl: p.githubUrl || '',
-      liveUrl: p.liveUrl || ''
+      liveUrl: p.liveUrl || '',
+      featured: p.featured || false
     });
   };
 
@@ -845,6 +846,51 @@ export const AdminDashboard = () => {
               ></textarea>
             </div>
 
+            {/* 4 Featured Projects Selector Dropdowns */}
+            <div className="pt-4 border-t border-[#49A4BB]/20 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <h3 className="text-sm font-mono font-bold text-[#15D8B3] uppercase tracking-wider">
+                  Select 4 Featured Projects for Landing Page
+                </h3>
+                <span className="text-[10px] font-mono text-[#F8FAFC]/60">
+                  Controls the 4 cards shown in "Featured Work" section
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[0, 1, 2, 3].map((slotIndex) => {
+                  const currentArr = Array.isArray(profile.featuredProjectIds) 
+                    ? profile.featuredProjectIds 
+                    : ['proj-13', 'proj-12', 'proj-19', 'proj-16'];
+                  const selectedVal = currentArr[slotIndex] || '';
+
+                  return (
+                    <div key={slotIndex} className="space-y-1">
+                      <label className="text-xs font-mono text-[#15D8B3] font-bold block">
+                        Featured Project #{slotIndex + 1}
+                      </label>
+                      <select
+                        value={selectedVal}
+                        onChange={(e) => {
+                          const updated = [...currentArr];
+                          updated[slotIndex] = e.target.value;
+                          setProfile({ ...profile, featuredProjectIds: updated });
+                        }}
+                        className="input-field bg-[#050508] text-xs font-sans"
+                      >
+                        <option value="">Select Project #{slotIndex + 1}</option>
+                        {projects.map((p) => (
+                          <option key={p._id} value={p._id}>
+                            {p.title} ({p.category})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <button type="submit" className="w-full py-3.5 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-sm hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20">
               Save All Profile Settings & 10 Social URLs to MongoDB
             </button>
@@ -1239,10 +1285,15 @@ export const AdminDashboard = () => {
                 {filteredProjects.map((p) => (
                   <div key={p._id} className="p-4 rounded-xl bg-[#050508] border border-[#49A4BB]/30 flex items-center justify-between gap-4 hover:border-[#15D8B3]">
                     <div className="space-y-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-[#15D8B3]/10 text-[#15D8B3] border border-[#15D8B3]/30">
                           {p.category}
                         </span>
+                        {p.featured && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#15D8B3] text-[#050508]">
+                            FEATURED ON LANDING PAGE
+                          </span>
+                        )}
                         <h4 className="font-bold text-white text-sm">{p.title}</h4>
                       </div>
                       <p className="text-xs text-[#F8FAFC]/70 line-clamp-1">{p.description}</p>

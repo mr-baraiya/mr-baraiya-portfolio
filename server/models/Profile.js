@@ -31,6 +31,7 @@ const profileSchema = new mongoose.Schema({
   projectsCompleted: { type: String, default: '21+' },
   yearsExperience: { type: String, default: '2+' },
   uptimeStats: { type: String, default: '100%' },
+  featuredProjectIds: { type: [String], default: ['proj-13', 'proj-12', 'proj-19', 'proj-16'] },
   updatedAt: { type: Date, default: Date.now }
 });
 

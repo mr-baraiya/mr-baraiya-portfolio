@@ -86,14 +86,16 @@ export const resumeExperienceData = [
   }
 ];
 
-// Seed or sync experience in database only if empty
+// Seed or sync experience in database
 const seedExperience = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
-      const count = await Experience.countDocuments();
-      if (count === 0) {
-        await Experience.insertMany(resumeExperienceData);
-        console.log('[MongoDB Experience] Seeded initial experience entries!');
+      for (const e of resumeExperienceData) {
+        await Experience.findOneAndUpdate(
+          { role: e.role, company: e.company },
+          { $set: e },
+          { upsert: true, new: true }
+        );
       }
     } catch (err) {
       console.error('[MongoDB Experience Seed Error]:', err.message);

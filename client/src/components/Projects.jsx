@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Eye, X, Layers, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { SkeletonGrid, SkeletonProjectCard } from './SkeletonLoader';
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80';
+const FALLBACK_IMAGE = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%230c0d14"/><rect x="30" y="30" width="740" height="440" rx="16" fill="%23050508" stroke="%2315D8B3" stroke-width="2" stroke-opacity="0.3"/><text x="400" y="230" fill="%2315D8B3" font-family="monospace" font-size="28" font-weight="bold" text-anchor="middle">&lt;Vishal Baraiya /&gt;</text><text x="400" y="280" fill="%23F8FAFC" font-family="sans-serif" font-size="16" fill-opacity="0.7" text-anchor="middle">Software Engineering Project Showcase</text></svg>';
 
 export const Projects = ({ projects = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -96,6 +96,7 @@ export const Projects = ({ projects = [] }) => {
                     src={project.image || FALLBACK_IMAGE}
                     alt={project.title}
                     loading="lazy"
+                    referrerPolicy="no-referrer"
                     onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE; }}
                     className="w-full h-full object-contain p-1 transition-transform duration-300 group-hover:scale-[1.02]"
                   />
@@ -192,6 +193,8 @@ export const Projects = ({ projects = [] }) => {
               <img
                 src={activeModalProject.image || FALLBACK_IMAGE}
                 alt={activeModalProject.title}
+                referrerPolicy="no-referrer"
+                onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE; }}
                 className="max-h-full max-w-full object-contain"
               />
             </div>

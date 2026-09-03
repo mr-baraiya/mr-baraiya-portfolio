@@ -35,13 +35,13 @@ export const GitHubActivity = () => {
     },
     {
       id: 3,
-      name: 'Weather-Notify-mcq-generator',
-      description: 'FastAPI Python application with RAG pipeline, Groq Llama 3.3 70B for PDF MCQ generation and automated weather alerts.',
-      html_url: 'https://github.com/mr-baraiya/Weather-Notify-mcq-generator',
-      stargazers_count: 3,
-      forks_count: 1,
-      language: 'Python',
-      updated_at: '2026-01-28'
+      name: 'weather-notify',
+      description: 'Next.js 16 web application with interactive 7-layer Windy.com weather map & live Doppler radar, WhatsApp subscriptions, and daily weather alerts via Twilio & Vercel Cron.',
+      html_url: 'https://github.com/mr-baraiya/weather-notify',
+      stargazers_count: 5,
+      forks_count: 2,
+      language: 'TypeScript',
+      updated_at: '2026-02-18'
     },
     {
       id: 4,

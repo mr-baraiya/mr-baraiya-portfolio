@@ -57,18 +57,29 @@ const resumeSkills = [
   { _id: 'sk38', name: 'Computer Networks', category: 'Coursework', description: 'TCP/IP protocols, HTTP/S & network security' }
 ];
 
+const seedSkills = async () => {
+  if (mongoose.connection.readyState === 1) {
+    try {
+      for (const s of resumeSkills) {
+        const { _id, ...rest } = s;
+        await Skill.findOneAndUpdate(
+          { name: rest.name },
+          { $set: rest },
+          { upsert: true, new: true }
+        );
+      }
+    } catch (err) {
+      console.error('[MongoDB Skill Seed Error]:', err.message);
+    }
+  }
+};
+
 // GET skills
 router.get('/', async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
-      let skills = await Skill.find();
-      if (skills.length === 0) {
-        skills = await Skill.insertMany(resumeSkills.map(s => {
-          const { _id, ...rest } = s;
-          return rest;
-        }));
-        console.log('[MongoDB Skills] Seeded resume skills into database!');
-      }
+      await seedSkills();
+      const skills = await Skill.find();
       return res.json(skills);
     }
     return res.json(resumeSkills);

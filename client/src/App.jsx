@@ -32,6 +32,8 @@ import {
 
 import { useLocation } from 'react-router-dom';
 
+import { FullScreenLoader } from './components/SkeletonLoader';
+
 // Scroll to top helper component on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -50,8 +52,10 @@ export function App() {
   const [skills, setSkills] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [dbStatus, setDbStatus] = useState({ isConnected: false });
+  const [loading, setLoading] = useState(true);
 
   const loadData = async () => {
+    setLoading(true);
     try {
       const [profData, galData, projData, skillData, expData, statusData] = await Promise.all([
         fetchProfile(),
@@ -70,12 +74,18 @@ export function App() {
       setDbStatus(statusData.database || { isConnected: false });
     } catch (err) {
       console.error('Error loading portfolio data:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     loadData();
   }, []);
+
+  if (loading) {
+    return <FullScreenLoader />;
+  }
 
   return (
     <Router>

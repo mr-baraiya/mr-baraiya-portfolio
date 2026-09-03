@@ -35,7 +35,8 @@ const defaultProfile = {
 
   projectsCompleted: '21+',
   yearsExperience: '2+',
-  uptimeStats: '100%'
+  uptimeStats: '100%',
+  featuredProjectIds: ['proj-13', 'proj-12', 'proj-19', 'proj-16']
 };
 
 // GET profile settings

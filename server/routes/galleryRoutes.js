@@ -297,10 +297,12 @@ export const publicFolderGalleryData = [
 const seedGalleryIfEmpty = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
-      const count = await Gallery.countDocuments();
-      if (count === 0) {
-        await Gallery.insertMany(publicFolderGalleryData);
-        console.log('[MongoDB Gallery] Seeded certificates into database!');
+      for (const item of publicFolderGalleryData) {
+        await Gallery.findOneAndUpdate(
+          { title: item.title },
+          { $set: item },
+          { upsert: true, new: true }
+        );
       }
     } catch (err) {
       console.error('[MongoDB Gallery Seed Error]:', err.message);

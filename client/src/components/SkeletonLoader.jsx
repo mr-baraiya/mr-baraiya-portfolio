@@ -113,4 +113,41 @@ export const SkeletonGrid = ({ count = 6, Component = SkeletonProjectCard, gridC
   </div>
 );
 
+// Full Screen Cyberpunk Database App Loader
+export const FullScreenLoader = () => (
+  <div className="fixed inset-0 z-[100] bg-[#050508] flex flex-col items-center justify-center p-6 text-center select-none font-sans">
+    <div className="relative flex items-center justify-center mb-8">
+      {/* Outer Pulse Rings */}
+      <div className="absolute w-28 h-28 rounded-full border border-[#15D8B3]/30 animate-ping" />
+      <div className="absolute w-24 h-24 rounded-full border border-[#49A4BB]/40 animate-pulse" />
+      
+      {/* Central Cyan Badge Icon */}
+      <div className="w-20 h-20 rounded-2xl bg-[#0c0d14] border border-[#15D8B3]/60 flex items-center justify-center shadow-2xl shadow-[#15D8B3]/30 backdrop-blur-md">
+        <span className="text-[#15D8B3] font-mono text-xl font-bold tracking-wider animate-pulse">
+          &lt;VB /&gt;
+        </span>
+      </div>
+    </div>
+
+    <div className="space-y-3 max-w-sm w-full">
+      <div className="flex items-center justify-between text-xs font-mono font-bold">
+        <span className="text-[#15D8B3] flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#15D8B3] animate-ping" />
+          FETCHING FROM MONGODB DATABASE
+        </span>
+        <span className="text-[#F8FAFC]/70">LIVE</span>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full h-2 rounded-full bg-[#0c0d14] border border-white/10 overflow-hidden p-0.5 relative">
+        <div className="h-full bg-gradient-to-r from-[#49A4BB] via-[#15D8B3] to-[#49A4BB] rounded-full animate-pulse w-3/4" />
+      </div>
+
+      <p className="text-[11px] font-mono text-[#F8FAFC]/60">
+        Loading Projects, Skills, Certificates &amp; Experience...
+      </p>
+    </div>
+  </div>
+);
+
 export default SkeletonGrid;
