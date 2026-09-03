@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  Mail, Send, MapPin, Phone, Github, Linkedin, Code2, 
-  Terminal, BarChart2, Award, Brain, Twitter, Youtube, Instagram 
+import {
+  Mail, Send, MapPin, Phone, Github, Linkedin, Code2,
+  Terminal, BarChart2, Award, Brain, Twitter, Youtube, Instagram
 } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
 import { submitContactForm } from '../api/apiService';
@@ -9,7 +9,7 @@ import { submitContactForm } from '../api/apiService';
 export const Contact = ({ profile, onMessageSent }) => {
   const email = profile?.email || 'baraiyavishalbhai32@gmail.com';
   const phone = profile?.phone || '+91 7383359679';
-  const location = profile?.location || 'Gujarat, India (Open to Remote)';
+  const location = profile?.location || 'Botad, Gujarat, India - 364710 (Open to Remote)';
   const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, '')}`;
 
   const socialLinks = [
@@ -55,7 +55,8 @@ export const Contact = ({ profile, onMessageSent }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
+    // Clear error on change if valid
     const err = validateField(name, value);
     setFormErrors(prev => ({ ...prev, [name]: err }));
   };
@@ -72,7 +73,7 @@ export const Contact = ({ profile, onMessageSent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       setStatus({ loading: false, success: false, error: 'Please correct the highlighted errors in the form.', responseMsg: '' });
       return;
@@ -86,7 +87,7 @@ export const Contact = ({ profile, onMessageSent }) => {
         loading: false,
         success: true,
         error: null,
-        responseMsg: data.message || 'Thank you! Your message has been sent successfully.'
+        responseMsg: data.message || 'Thank you! Your message has been sent successfully and notified to admin.'
       });
       setFormData({ name: '', email: '', inquiryType: '', subject: '', message: '' });
       setFormErrors({});
@@ -103,47 +104,44 @@ export const Contact = ({ profile, onMessageSent }) => {
   };
 
   return (
-    <section id="contact" className="pt-8 pb-20 relative bg-[#050508] text-[#F8FAFC]">
-      <div className="container-fluid space-y-10">
-        
+    <section id="contact" className="pt-4 sm:pt-6 pb-16 sm:pb-20 relative bg-[#050508] text-[#F8FAFC]">
+      <div className="container-fluid">
+
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0c0d14] border border-[#15D8B3]/30 text-xs font-mono text-[#15D8B3]">
-              <Mail className="w-3.5 h-3.5" />
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#15D8B3]">
+              <Mail className="w-3.5 h-3.5 text-[#15D8B3]" />
               <span>Get In Touch</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#F8FAFC]">
-              Let's Connect &amp; Collaborate
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#F8FAFC]">
+              Let's Connect & Build Together
             </h2>
-            <p className="text-xs sm:text-sm text-[#F8FAFC]/75 font-light max-w-xl">
-              Have a project in mind, software opportunity, or technical inquiry? Send a message directly.
-            </p>
           </div>
         </div>
 
-        {/* 50-50 Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          
+        {/* 50-50 Split Equal Size Containers */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-stretch">
+
           {/* Left Column: Contact Information */}
-          <div className="bg-[#0c0d14] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between space-y-6 h-full">
+          <div className="bg-[#050508] border border-[#49A4BB]/30 rounded-xl p-6 sm:p-8 shadow-xl flex flex-col justify-between space-y-6 h-full">
             <div className="space-y-6">
-              
+
               <div className="space-y-2">
-                <h3 className="text-xl font-bold text-[#F8FAFC]">Contact Details</h3>
+                <h3 className="text-xl font-bold text-[#F8FAFC]">Contact Information</h3>
                 <p className="text-xs text-[#F8FAFC]/75 font-light leading-relaxed">
-                  Available for engineering roles, web development projects, and software collaborations.
+                  Feel free to reach out for project collaborations, software engineering opportunities, or technical inquiries.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-[#050508] border border-white/10 hover:border-[#15D8B3]/50 transition-colors no-underline group"
+                  className="flex items-start gap-4 p-4 rounded-lg bg-[#050814] border border-[#49A4BB]/30 hover:border-[#15D8B3] transition-colors no-underline group"
                 >
                   <Mail className="w-5 h-5 text-[#15D8B3] flex-shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[10px] text-[#F8FAFC]/60 font-mono uppercase block">Direct Email</span>
+                    <span className="text-[10px] text-[#F8FAFC]/60 font-mono uppercase block">Email</span>
                     <p className="text-xs font-mono font-semibold text-[#F8FAFC] group-hover:text-[#15D8B3] transition-colors break-all">{email}</p>
                   </div>
                 </a>
@@ -152,16 +150,16 @@ export const Contact = ({ profile, onMessageSent }) => {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-start gap-4 p-4 rounded-xl bg-[#050508] border border-white/10 hover:border-[#15D8B3]/50 transition-colors no-underline group"
+                  className="flex items-start gap-4 p-4 rounded-lg bg-[#050814] border border-[#49A4BB]/30 hover:border-[#15D8B3] transition-colors no-underline group"
                 >
-                  <SiWhatsapp className="w-5 h-5 text-[#15D8B3] flex-shrink-0 mt-0.5 group-hover:scale-105 transition-transform" />
+                  <SiWhatsapp className="w-5 h-5 text-[#15D8B3] flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <span className="text-[10px] text-[#F8FAFC]/60 font-mono uppercase block">WhatsApp Direct</span>
-                    <p className="text-xs font-mono font-semibold text-[#F8FAFC] group-hover:text-[#15D8B3] transition-colors">Start Instant Message ↗</p>
+                    <span className="text-[10px] text-[#F8FAFC]/60 font-mono uppercase block">WhatsApp Direct Chat</span>
+                    <p className="text-xs font-mono font-semibold text-[#F8FAFC] group-hover:text-[#15D8B3] transition-colors">Start Instant Chat ↗</p>
                   </div>
                 </a>
 
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-[#050508] border border-white/10">
+                <div className="flex items-start gap-4 p-4 rounded-lg bg-[#050814] border border-[#49A4BB]/30">
                   <MapPin className="w-5 h-5 text-[#15D8B3] flex-shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] text-[#F8FAFC]/60 font-mono uppercase block">Location</span>
@@ -172,12 +170,12 @@ export const Contact = ({ profile, onMessageSent }) => {
 
             </div>
 
-            {/* Bottom Profiles */}
-            <div className="pt-4 space-y-3 border-t border-white/10">
+            {/* Bottom Developer & Social Links Grid */}
+            <div className="pt-4 space-y-3">
               <span className="text-[10px] font-mono text-[#15D8B3] font-bold uppercase tracking-wider block">
-                Developer &amp; Social Profiles
+                Developer & Social Profiles
               </span>
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-3">
                 {socialLinks.map((link) => {
                   const IconComponent = link.icon;
                   return (
@@ -186,7 +184,7 @@ export const Contact = ({ profile, onMessageSent }) => {
                       href={link.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-3 rounded-xl bg-[#050508] border border-white/10 text-[#F8FAFC]/80 hover:text-[#15D8B3] hover:border-[#15D8B3]/50 transition-all"
+                      className="p-3 rounded-lg bg-[#050814] border border-[#49A4BB]/30 text-[#F8FAFC]/80 hover:text-[#15D8B3] hover:border-[#15D8B3] hover:-translate-y-0.5 transition-all"
                       title={link.name}
                     >
                       <IconComponent className="w-4 h-4" />
@@ -198,21 +196,21 @@ export const Contact = ({ profile, onMessageSent }) => {
 
           </div>
 
-          {/* Right Column: Contact Form */}
-          <div className="bg-[#0c0d14] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl h-full flex flex-col justify-between">
-            <form onSubmit={handleSubmit} noValidate className="space-y-5 flex-grow flex flex-col justify-between">
-              
-              <div className="space-y-4">
+          {/* Right Column: Send a Message Form with Validation */}
+          <div className="bg-[#050508] border border-[#49A4BB]/30 rounded-xl p-6 sm:p-8 shadow-xl h-full flex flex-col justify-between">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6 flex-grow flex flex-col justify-between">
+
+              <div className="space-y-5">
                 <h3 className="text-xl font-bold text-[#F8FAFC]">Send a Message</h3>
 
                 {status.success && (
-                  <div className="p-4 rounded-xl bg-[#15D8B3]/10 border border-[#15D8B3]/50 text-[#15D8B3] text-xs font-mono font-semibold animate-fadeIn">
+                  <div className="p-4 rounded-lg bg-[#15D8B3]/10 border border-[#15D8B3]/50 text-[#15D8B3] text-xs font-mono font-semibold animate-fadeIn">
                     ✓ {status.responseMsg}
                   </div>
                 )}
 
                 {status.error && (
-                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/40 text-red-400 text-xs font-mono animate-fadeIn">
+                  <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/40 text-red-400 text-xs font-mono animate-fadeIn">
                     ⚠️ {status.error}
                   </div>
                 )}
@@ -226,12 +224,11 @@ export const Contact = ({ profile, onMessageSent }) => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="Full Name"
-                      className={`w-full px-4 py-2.5 rounded-xl bg-[#050508] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none focus:ring-1 focus:ring-[#15D8B3] ${
-                        formErrors.name
-                          ? 'border border-red-500'
-                          : 'border border-white/10 focus:border-[#15D8B3]'
-                      }`}
+                      placeholder="Enter your full name"
+                      className={`w-full px-4 py-2.5 rounded-lg bg-[#050814] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none ${formErrors.name
+                          ? 'border border-red-500 focus:border-red-400'
+                          : 'border border-[#49A4BB]/30 focus:border-[#15D8B3]'
+                        }`}
                     />
                     {formErrors.name && (
                       <span className="text-[11px] font-mono text-red-400 block pt-0.5">{formErrors.name}</span>
@@ -247,11 +244,10 @@ export const Contact = ({ profile, onMessageSent }) => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="name@example.com"
-                      className={`w-full px-4 py-2.5 rounded-xl bg-[#050508] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none focus:ring-1 focus:ring-[#15D8B3] ${
-                        formErrors.email
-                          ? 'border border-red-500'
-                          : 'border border-white/10 focus:border-[#15D8B3]'
-                      }`}
+                      className={`w-full px-4 py-2.5 rounded-lg bg-[#050814] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none ${formErrors.email
+                          ? 'border border-red-500 focus:border-red-400'
+                          : 'border border-[#49A4BB]/30 focus:border-[#15D8B3]'
+                        }`}
                     />
                     {formErrors.email && (
                       <span className="text-[11px] font-mono text-red-400 block pt-0.5">{formErrors.email}</span>
@@ -259,32 +255,34 @@ export const Contact = ({ profile, onMessageSent }) => {
                   </div>
                 </div>
 
-                {/* Inquiry Type Select */}
+                {/* Inquiry Type Select Dropdown */}
                 <div className="space-y-1">
                   <label className="text-xs font-mono text-[#F8FAFC]/80 block">Inquiry Type *</label>
                   <select
                     name="inquiryType"
                     value={formData.inquiryType}
                     onChange={handleChange}
-                    className={`w-full px-4 py-2.5 rounded-xl bg-[#050508] text-xs font-mono text-[#F8FAFC] cursor-pointer transition-colors focus:outline-none focus:ring-1 focus:ring-[#15D8B3] ${
-                      formErrors.inquiryType
-                        ? 'border border-red-500'
-                        : 'border border-white/10 focus:border-[#15D8B3]'
-                    }`}
+                    className={`w-full px-4 py-2.5 rounded-lg bg-[#050814] text-xs font-mono text-[#F8FAFC] cursor-pointer transition-colors focus:outline-none ${formErrors.inquiryType
+                        ? 'border border-red-500 focus:border-red-400'
+                        : 'border border-[#49A4BB]/30 focus:border-[#15D8B3]'
+                      }`}
                   >
-                    <option value="" disabled className="bg-[#050508] text-gray-400">Select inquiry type</option>
-                    <option value="Job Opportunity" className="bg-[#050508] text-[#F8FAFC]">Job Opportunity / Role</option>
-                    <option value="Freelance Project" className="bg-[#050508] text-[#F8FAFC]">Web Development / Project</option>
-                    <option value="Collaboration" className="bg-[#050508] text-[#F8FAFC]">Software Collaboration</option>
-                    <option value="AI/ML Project" className="bg-[#050508] text-[#F8FAFC]">AI RAG / LLM Workflow</option>
-                    <option value="Other" className="bg-[#050508] text-[#F8FAFC]">Other Inquiry</option>
+                    <option value="" disabled className="bg-[#050508] text-gray-400">Select an inquiry type</option>
+                    <option value="Job Opportunity" className="bg-[#050508] text-[#F8FAFC]">Job Opportunity</option>
+                    <option value="Freelance Project" className="bg-[#050508] text-[#F8FAFC]">Freelance Project</option>
+                    <option value="Collaboration" className="bg-[#050508] text-[#F8FAFC]">Collaboration</option>
+                    <option value="AI/ML Project" className="bg-[#050508] text-[#F8FAFC]">AI/ML Project</option>
+                    <option value="Web Development" className="bg-[#050508] text-[#F8FAFC]">Web Development</option>
+                    <option value="DevOps / Cloud" className="bg-[#050508] text-[#F8FAFC]">DevOps / Cloud</option>
+                    <option value="Teaching / Mentorship" className="bg-[#050508] text-[#F8FAFC]">Teaching / Mentorship</option>
+                    <option value="Other" className="bg-[#050508] text-[#F8FAFC]">Other</option>
                   </select>
                   {formErrors.inquiryType && (
                     <span className="text-[11px] font-mono text-red-400 block pt-0.5">{formErrors.inquiryType}</span>
                   )}
                 </div>
 
-                {/* Subject */}
+                {/* Subject Input */}
                 <div className="space-y-1">
                   <label className="text-xs font-mono text-[#F8FAFC]/80 block">Subject *</label>
                   <input
@@ -292,19 +290,18 @@ export const Contact = ({ profile, onMessageSent }) => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    placeholder="Subject of message"
-                    className={`w-full px-4 py-2.5 rounded-xl bg-[#050508] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none focus:ring-1 focus:ring-[#15D8B3] ${
-                      formErrors.subject
-                        ? 'border border-red-500'
-                        : 'border border-white/10 focus:border-[#15D8B3]'
-                    }`}
+                    placeholder="Project inquiry / Opportunity"
+                    className={`w-full px-4 py-2.5 rounded-lg bg-[#050814] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none ${formErrors.subject
+                        ? 'border border-red-500 focus:border-red-400'
+                        : 'border border-[#49A4BB]/30 focus:border-[#15D8B3]'
+                      }`}
                   />
                   {formErrors.subject && (
                     <span className="text-[11px] font-mono text-red-400 block pt-0.5">{formErrors.subject}</span>
                   )}
                 </div>
 
-                {/* Message */}
+                {/* Message Textarea */}
                 <div className="space-y-1">
                   <label className="text-xs font-mono text-[#F8FAFC]/80 block">Message *</label>
                   <textarea
@@ -313,11 +310,10 @@ export const Contact = ({ profile, onMessageSent }) => {
                     onChange={handleChange}
                     rows="4"
                     placeholder="Write your message here..."
-                    className={`w-full px-4 py-2.5 rounded-xl bg-[#050508] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none focus:ring-1 focus:ring-[#15D8B3] resize-none ${
-                      formErrors.message
-                        ? 'border border-red-500'
-                        : 'border border-white/10 focus:border-[#15D8B3]'
-                    }`}
+                    className={`w-full px-4 py-2.5 rounded-lg bg-[#050814] text-xs font-mono text-[#F8FAFC] transition-colors focus:outline-none resize-none ${formErrors.message
+                        ? 'border border-red-500 focus:border-red-400'
+                        : 'border border-[#49A4BB]/30 focus:border-[#15D8B3]'
+                      }`}
                   ></textarea>
                   {formErrors.message && (
                     <span className="text-[11px] font-mono text-red-400 block pt-0.5">{formErrors.message}</span>
@@ -329,7 +325,7 @@ export const Contact = ({ profile, onMessageSent }) => {
                 <button
                   type="submit"
                   disabled={status.loading}
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#15D8B3] text-[#050508] text-xs font-bold font-mono tracking-wide hover:bg-[#12be9d] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#15D8B3]/20 disabled:opacity-50"
+                  className="w-full py-3 px-6 rounded-lg bg-[#15D8B3] text-[#050508] text-xs font-bold font-mono tracking-wide hover:bg-[#15D8B3]/90 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#15D8B3]/20 disabled:opacity-50"
                 >
                   {status.loading ? (
                     <span>Sending Message...</span>

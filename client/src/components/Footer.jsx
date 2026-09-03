@@ -76,7 +76,12 @@ export const Footer = ({ profileData = {} }) => {
           {/* Col 1: Developer Info & Personal Bio Tagline (5 cols) */}
           <div className="md:col-span-5 space-y-4">
             <Link to="/" className="inline-flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-[#F8FAFC] no-underline group">
-              <img src="/logo.svg" alt="Mr. Baraiya Logo" className="w-8 h-8 object-contain transition-transform group-hover:scale-110" />
+              <img
+                src="https://catgbuvicqq4rhla.public.blob.vercel-storage.com/logo.svg"
+                alt="Mr. Baraiya Logo"
+                onError={(e) => { e.target.onerror = null; e.target.src = '/logo.svg'; }}
+                className="w-8 h-8 object-contain transition-transform group-hover:scale-110"
+              />
               <span>{name}</span>
             </Link>
             

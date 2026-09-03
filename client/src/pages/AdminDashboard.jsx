@@ -34,30 +34,49 @@ export const AdminDashboard = () => {
     confirmPassword: ''
   });
   const [passwordStatus, setPasswordStatus] = useState({ type: '', msg: '' });
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState({});
+
+  const validatePasswordForm = () => {
+    const errors = {};
+    const { currentPassword, newPassword, confirmPassword } = changePasswordForm;
+
+    if (!currentPassword || !currentPassword.trim()) {
+      errors.currentPassword = 'Current password is required.';
+    }
+    if (!newPassword) {
+      errors.newPassword = 'New password is required.';
+    } else if (newPassword.length < 6) {
+      errors.newPassword = 'New password must be at least 6 characters long.';
+    }
+    if (!confirmPassword) {
+      errors.confirmPassword = 'Please confirm your new password.';
+    } else if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+      errors.confirmPassword = 'New password and confirm password do not match.';
+    }
+    if (currentPassword && newPassword && currentPassword === newPassword) {
+      errors.newPassword = 'New password must be different from your current password.';
+    }
+
+    setPasswordErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handlePasswordInputChange = (field, value) => {
+    const updatedForm = { ...changePasswordForm, [field]: value };
+    setChangePasswordForm(updatedForm);
+    
+    // Clear inline error for field as user types
+    if (passwordErrors[field]) {
+      setPasswordErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
     setPasswordStatus({ type: '', msg: '' });
 
-    const { currentPassword, newPassword, confirmPassword } = changePasswordForm;
-
-    if (!currentPassword) {
-      setPasswordStatus({ type: 'error', msg: 'Current password is required.' });
-      return;
-    }
-    if (!newPassword || newPassword.length < 6) {
-      setPasswordStatus({ type: 'error', msg: 'New password must be at least 6 characters long.' });
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setPasswordStatus({ type: 'error', msg: 'New password and confirm password do not match.' });
-      return;
-    }
-    if (currentPassword === newPassword) {
-      setPasswordStatus({ type: 'error', msg: 'New password must be different from your current password.' });
+    if (!validatePasswordForm()) {
+      setPasswordStatus({ type: 'error', msg: 'Please correct the highlighted validation errors.' });
       return;
     }
 
@@ -66,6 +85,7 @@ export const AdminDashboard = () => {
       const res = await changePasswordApi(changePasswordForm);
       setPasswordStatus({ type: 'success', msg: res.message || 'Admin password updated successfully!' });
       setChangePasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordErrors({});
       notify('Admin password updated successfully in MongoDB database!');
     } catch (err) {
       setPasswordStatus({ type: 'error', msg: err.error || err.message || 'Failed to update password.' });
@@ -172,24 +192,24 @@ export const AdminDashboard = () => {
     try {
       const res = await uploadFileApi(file);
       if (res.success) {
-        notify(`File uploaded successfully: ${res.filePath}`);
+        notify(res.message || 'PDF uploaded & cover screenshot generated automatically!');
         
         if (targetFormType === 'gallery') {
           setGalleryForm(prev => ({
             ...prev,
-            image: res.coverImagePath || res.filePath,
-            pdfUrl: file.type === 'application/pdf' ? res.filePath : prev.pdfUrl,
-            credentialUrl: res.filePath
+            image: res.imageUrl || res.pdfUrl || prev.image,
+            pdfUrl: res.pdfUrl || prev.pdfUrl,
+            credentialUrl: res.pdfUrl || res.imageUrl || prev.credentialUrl
           }));
         } else if (targetFormType === 'project') {
           setProjectForm(prev => ({
             ...prev,
-            image: res.coverImagePath || res.filePath
+            image: res.imageUrl || res.pdfUrl || prev.image
           }));
         }
       }
     } catch (err) {
-      alert(err.error || 'Failed to upload file');
+      alert(err.error || err.message || 'Failed to upload file');
     } finally {
       setUploading(false);
     }
@@ -582,14 +602,13 @@ export const AdminDashboard = () => {
             Messages ({messages.length})
           </button>
           <button
-            onClick={() => { setActiveTab('security'); setPasswordStatus({ type: '', msg: '' }); }}
-            className={`py-3 px-4 md:px-5 text-xs md:text-sm font-mono font-bold border-b-2 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            onClick={() => { setActiveTab('security'); setPasswordStatus({ type: '', msg: '' }); setPasswordErrors({}); }}
+            className={`py-3 px-4 md:px-5 text-xs md:text-sm font-mono font-bold border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === 'security'
                 ? 'border-[#15D8B3] text-[#15D8B3]'
                 : 'border-transparent text-[#F8FAFC]/70 hover:text-white'
             }`}
           >
-            <Lock className="w-3.5 h-3.5" />
             <span>Security & Password</span>
           </button>
         </div>
@@ -846,12 +865,12 @@ export const AdminDashboard = () => {
                 </div>
 
                 {/* Direct File Upload Dropzone */}
-                <div className="p-4 rounded-xl bg-[#0c0d14] border-2 border-dashed border-[#15D8B3]/50 text-center space-y-2 relative">
+                <div className="p-4 rounded-xl bg-[#0c0d14] border-2 border-dashed border-[#15D8B3]/50 text-center space-y-2 relative group hover:border-[#15D8B3]">
                   <div className="text-xs font-mono font-bold text-[#F8FAFC]">
-                    {uploading ? 'Uploading & Rendering Cover...' : 'Upload Image or PDF Certificate'}
+                    {uploading ? 'Rendering Cover & Uploading to Vercel Blob...' : 'Upload PDF Certificate / Image'}
                   </div>
-                  <p className="text-[10px] text-[#F8FAFC]/60 font-mono">
-                    PDF files automatically generate high-res PNG cover screenshots in client/public/img!
+                  <p className="text-[10px] text-[#15D8B3] font-mono">
+                    Simply drop your PDF certificate. Page 1 screenshot &amp; PDF CDN URLs are auto-stored and auto-filled!
                   </p>
                   <input
                     type="file"
@@ -861,6 +880,25 @@ export const AdminDashboard = () => {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                 </div>
+
+                {/* Auto-filled Vercel Blob CDN Preview Badge */}
+                {galleryForm.image && (
+                  <div className="p-3 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/30 flex items-center gap-3">
+                    <img
+                      src={galleryForm.image}
+                      alt="Cover Preview"
+                      className="w-12 h-12 object-contain bg-[#050508] rounded border border-white/10 p-0.5 shrink-0"
+                    />
+                    <div className="min-w-0 flex-1 space-y-0.5">
+                      <span className="text-[10px] font-mono font-bold text-[#15D8B3] block">
+                        Auto-Generated Cover Image &amp; PDF URLs Ready
+                      </span>
+                      <p className="text-[10px] font-mono text-[#F8FAFC]/60 truncate">
+                        {galleryForm.pdfUrl || galleryForm.image}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Title *</label>
@@ -911,24 +949,24 @@ export const AdminDashboard = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Image Cover Path *</label>
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Image Cover CDN URL (Auto-filled) *</label>
                   <input
                     type="text" required
                     value={galleryForm.image || ''}
                     onChange={(e) => setGalleryForm({ ...galleryForm, image: e.target.value })}
-                    className="input-field"
-                    placeholder="/img/tcs_codevita_season13.png"
+                    className="input-field text-xs text-[#15D8B3]"
+                    placeholder="Auto-generated on PDF upload"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">PDF Document Path</label>
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">PDF Document CDN URL (Auto-filled)</label>
                   <input
                     type="text"
                     value={galleryForm.pdfUrl || ''}
                     onChange={(e) => setGalleryForm({ ...galleryForm, pdfUrl: e.target.value, credentialUrl: e.target.value })}
-                    className="input-field"
-                    placeholder="/pdf/tcs_codevita_season13.pdf"
+                    className="input-field text-xs text-[#15D8B3]"
+                    placeholder="Auto-generated on PDF upload"
                   />
                 </div>
 
@@ -1472,33 +1510,22 @@ export const AdminDashboard = () => {
         {/* --- TAB 6: SECURITY & CHANGE ADMIN PASSWORD --- */}
         {activeTab === 'security' && (
           <div className="glass-card p-6 sm:p-8 border-[#49A4BB]/30 space-y-6 max-w-2xl mx-auto bg-[#050508] rounded-2xl shadow-2xl">
-            <div className="flex items-center gap-3 border-b border-[#49A4BB]/20 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#15D8B3]/10 border border-[#15D8B3]/30 flex items-center justify-center text-[#15D8B3]">
-                <Key className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span>Change Admin Password</span>
-                  <ShieldCheck className="w-5 h-5 text-[#15D8B3]" />
-                </h2>
-                <p className="text-xs font-mono text-[#F8FAFC]/70">
-                  Update your admin account authentication password in MongoDB with old password validation
-                </p>
-              </div>
+            <div className="border-b border-[#49A4BB]/20 pb-4">
+              <h2 className="text-xl font-bold text-white">
+                Change Admin Password
+              </h2>
+              <p className="text-xs font-mono text-[#F8FAFC]/70 mt-1">
+                Update your admin account authentication password in MongoDB with old password validation
+              </p>
             </div>
 
             {/* Notification alert banners */}
             {passwordStatus.msg && (
-              <div className={`p-4 rounded-xl border flex items-center gap-3 text-xs font-mono font-semibold animate-fadeIn ${
+              <div className={`p-4 rounded-xl border text-xs font-mono font-semibold animate-fadeIn ${
                 passwordStatus.type === 'error'
                   ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                   : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
               }`}>
-                {passwordStatus.type === 'error' ? (
-                  <AlertTriangle className="w-4 h-4 shrink-0" />
-                ) : (
-                  <CheckCircle2 className="w-4 h-4 shrink-0" />
-                )}
                 <span>{passwordStatus.msg}</span>
               </div>
             )}
@@ -1510,23 +1537,16 @@ export const AdminDashboard = () => {
                 <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
                   Current Password <span className="text-rose-400">*</span>
                 </label>
-                <div className="relative">
-                  <input
-                    type={showCurrentPassword ? "text" : "password"}
-                    required
-                    value={changePasswordForm.currentPassword}
-                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, currentPassword: e.target.value })}
-                    className="input-field pr-10"
-                    placeholder="Enter your current admin password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
-                  >
-                    {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+                <input
+                  type="password"
+                  value={changePasswordForm.currentPassword}
+                  onChange={(e) => handlePasswordInputChange('currentPassword', e.target.value)}
+                  className={`input-field ${passwordErrors.currentPassword ? 'border-rose-500 focus:border-rose-500' : ''}`}
+                  placeholder="Enter your current admin password"
+                />
+                {passwordErrors.currentPassword && (
+                  <p className="text-xs font-mono text-rose-400 mt-1">{passwordErrors.currentPassword}</p>
+                )}
               </div>
 
               {/* 2. New Password */}
@@ -1534,26 +1554,15 @@ export const AdminDashboard = () => {
                 <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
                   New Password <span className="text-rose-400">*</span>
                 </label>
-                <div className="relative">
-                  <input
-                    type={showNewPassword ? "text" : "password"}
-                    required
-                    minLength={6}
-                    value={changePasswordForm.newPassword}
-                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, newPassword: e.target.value })}
-                    className="input-field pr-10"
-                    placeholder="Minimum 6 characters"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
-                  >
-                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {changePasswordForm.newPassword && changePasswordForm.newPassword.length < 6 && (
-                  <p className="text-[10px] font-mono text-rose-400">Password must be at least 6 characters long.</p>
+                <input
+                  type="password"
+                  value={changePasswordForm.newPassword}
+                  onChange={(e) => handlePasswordInputChange('newPassword', e.target.value)}
+                  className={`input-field ${passwordErrors.newPassword ? 'border-rose-500 focus:border-rose-500' : ''}`}
+                  placeholder="Minimum 6 characters"
+                />
+                {passwordErrors.newPassword && (
+                  <p className="text-xs font-mono text-rose-400 mt-1">{passwordErrors.newPassword}</p>
                 )}
               </div>
 
@@ -1562,26 +1571,15 @@ export const AdminDashboard = () => {
                 <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">
                   Confirm New Password <span className="text-rose-400">*</span>
                 </label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    required
-                    minLength={6}
-                    value={changePasswordForm.confirmPassword}
-                    onChange={(e) => setChangePasswordForm({ ...changePasswordForm, confirmPassword: e.target.value })}
-                    className="input-field pr-10"
-                    placeholder="Re-enter your new password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#F8FAFC]/50 hover:text-white transition-colors cursor-pointer"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {changePasswordForm.confirmPassword && changePasswordForm.newPassword !== changePasswordForm.confirmPassword && (
-                  <p className="text-[10px] font-mono text-rose-400">Passwords do not match.</p>
+                <input
+                  type="password"
+                  value={changePasswordForm.confirmPassword}
+                  onChange={(e) => handlePasswordInputChange('confirmPassword', e.target.value)}
+                  className={`input-field ${passwordErrors.confirmPassword ? 'border-rose-500 focus:border-rose-500' : ''}`}
+                  placeholder="Re-enter your new password"
+                />
+                {passwordErrors.confirmPassword && (
+                  <p className="text-xs font-mono text-rose-400 mt-1">{passwordErrors.confirmPassword}</p>
                 )}
               </div>
 
@@ -1593,13 +1591,11 @@ export const AdminDashboard = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-xs hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20 flex items-center gap-2"
+                  className="px-6 py-3 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-xs hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20"
                 >
-                  <Lock className="w-4 h-4" />
                   <span>{loading ? 'Updating Password...' : 'Update Admin Password'}</span>
                 </button>
               </div>
-
             </form>
           </div>
         )}

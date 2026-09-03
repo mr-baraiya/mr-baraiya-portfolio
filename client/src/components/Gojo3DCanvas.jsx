@@ -61,10 +61,10 @@ export const Gojo3DCanvas = () => {
     pointLight.position.set(0, 2, 3);
     scene.add(pointLight);
 
-    // 5. Load Textures for Flying Phoenix Bird
+    // 5. Load Textures for Flying Phoenix Bird from Vercel Blob Storage
     const textureLoader = new THREE.TextureLoader();
-    const diffuseMap = textureLoader.load('/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_D_A.tga.png');
-    const emissiveMap = textureLoader.load('/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_E.tga.png');
+    const diffuseMap = textureLoader.load('https://catgbuvicqq4rhla.public.blob.vercel-storage.com/models_phoenix-bird_textures_Tex_Ride_FengHuang_01a_D_A.tga.png');
+    const emissiveMap = textureLoader.load('https://catgbuvicqq4rhla.public.blob.vercel-storage.com/models_phoenix-bird_textures_Tex_Ride_FengHuang_01a_E.tga.png');
 
     const birdMaterial = new THREE.MeshStandardMaterial({
       map: diffuseMap,
@@ -76,14 +76,14 @@ export const Gojo3DCanvas = () => {
       side: THREE.DoubleSide
     });
 
-    // 6. Load FBX 3D Model with URLModifier redirecting textures to public folder
+    // 6. Load FBX 3D Model with URLModifier redirecting textures to Vercel Blob CDN
     const manager = new THREE.LoadingManager();
     manager.setURLModifier((url) => {
       if (url.includes('Tex_Ride_FengHuang_01b_D_A') || url.includes('Tex_Ride_FengHuang_01a_D_A')) {
-        return '/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_D_A.tga.png';
+        return 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/models_phoenix-bird_textures_Tex_Ride_FengHuang_01a_D_A.tga.png';
       }
       if (url.includes('Tex_Ride_FengHuang_01') || url.endsWith('.tga') || url.endsWith('.tga.png')) {
-        return '/models/phoenix-bird/textures/Tex_Ride_FengHuang_01a_E.tga.png';
+        return 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/models_phoenix-bird_textures_Tex_Ride_FengHuang_01a_E.tga.png';
       }
       return url;
     });
@@ -93,7 +93,7 @@ export const Gojo3DCanvas = () => {
     let model;
 
     fbxLoader.load(
-      '/models/phoenix-bird/source/fly.fbx',
+      'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/models_phoenix-bird_source_fly.fbx',
       (fbx) => {
         model = fbx;
 

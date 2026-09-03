@@ -27,9 +27,13 @@ export const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050508]/95 backdrop-blur-md border-b border-[#49A4BB]/20 py-4">
       <div className="container-fluid flex items-center justify-between">
-        {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 text-xl font-bold tracking-tight text-[#F8FAFC] no-underline group">
-          <img src="/logo.svg" alt="Mr. Baraiya Logo" className="w-8 h-8 object-contain transition-transform group-hover:scale-110" />
+          <img
+            src="https://catgbuvicqq4rhla.public.blob.vercel-storage.com/logo.svg"
+            alt="Mr. Baraiya Logo"
+            onError={(e) => { e.target.onerror = null; e.target.src = '/logo.svg'; }}
+            className="w-8 h-8 object-contain transition-transform group-hover:scale-110"
+          />
           <span>Mr. Baraiya</span>
         </Link>
 

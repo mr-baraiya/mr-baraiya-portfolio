@@ -30,6 +30,19 @@ import {
   fetchServerStatus
 } from './api/apiService';
 
+import { useLocation } from 'react-router-dom';
+
+// Scroll to top helper component on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+
+  return null;
+};
+
 export function App() {
   const [profile, setProfile] = useState({});
   const [galleryItems, setGalleryItems] = useState([]);
@@ -66,6 +79,7 @@ export function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-[#050508] text-[#F8FAFC] flex flex-col font-sans">
         <Routes>
           {/* Public Pages with Shared Navbar and Footer */}
