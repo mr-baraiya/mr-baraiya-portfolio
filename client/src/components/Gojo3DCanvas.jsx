@@ -6,8 +6,19 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 export const Gojo3DCanvas = () => {
   const mountRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
 
   useEffect(() => {
+    const handleScreenCheck = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleScreenCheck);
+    return () => window.removeEventListener('resize', handleScreenCheck);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const container = mountRef.current;
     if (!container) return;
 
@@ -209,7 +220,9 @@ export const Gojo3DCanvas = () => {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <div className="relative w-full h-[520px] sm:h-[600px] lg:h-[680px] flex items-center justify-center select-none overflow-hidden">

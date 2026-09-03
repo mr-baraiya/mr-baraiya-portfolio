@@ -117,8 +117,8 @@ export const Hero = ({ profile }) => {
 
           </div>
 
-          {/* Right Column - 3D Interactive Model */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
+          {/* Right Column - 3D Interactive Model (Desktop Only) */}
+          <div className="hidden lg:flex lg:col-span-5 relative items-center justify-center">
             <Gojo3DCanvas />
           </div>
 
