@@ -12,7 +12,7 @@ export const Hero = ({ profile }) => {
     : 'https://www.linkedin.com/in/baraiya-vishalbhai/';
   
   const rawResume = profile?.resumeUrl?.trim();
-  const resumeUrl = (rawResume && rawResume !== '#' && rawResume !== '') 
+  const resumeUrl = (rawResume && rawResume !== '#' && rawResume !== '' && !rawResume.startsWith('/pdf/')) 
     ? rawResume 
     : 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/Vishal_Baraiya_Resume.pdf';
 

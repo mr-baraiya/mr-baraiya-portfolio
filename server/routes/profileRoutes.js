@@ -17,7 +17,7 @@ const defaultProfile = {
   email: 'baraiyavishalbhai32@gmail.com',
   phone: '+91 7383359679',
   location: 'Botad, Gujarat, India - 364710 (Open to Remote)',
-  resumeUrl: '/pdf/Vishal_Baraiya_Resume.pdf',
+  resumeUrl: 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/Vishal_Baraiya_Resume.pdf',
   education: 'B.Tech CSE - Darshan University (CGPA 9.24/10)',
 
   // 10 Developer & Social Profile URLs
