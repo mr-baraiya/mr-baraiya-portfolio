@@ -8,7 +8,7 @@ export const connectDB = async () => {
     return true;
   }
 
-  const uri = process.env.MONGO_URI;
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
   if (!uri && (process.env.VERCEL || process.env.NODE_ENV === 'production')) {
     isConnected = false;
     return false;

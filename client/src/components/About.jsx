@@ -5,8 +5,8 @@ export const About = ({ profile = {} }) => {
   const {
     name = 'Vishal Baraiya',
     role = 'Software Engineer & CS Student | Web Development, AI/ML & DevOps',
-    bio = 'Computer Science student at Darshan University (9.24 CGPA). I build web applications, explore AI/ML RAG pipelines, and share what I learn through teaching.',
-    aboutText1 = "Hi, I'm Vishal Baraiya! I'm a Computer Science student and software developer based in Botad, Gujarat. I love building practical software solutions — from responsive web apps and REST APIs to AI-driven automation workflows.",
+    bio = "My journey hasn't always been straightforward. Like the Phoenix, I’ve learned to turn setbacks into growth, adapt to every challenge, and come back stronger — one build at a time.",
+    aboutText1 = "Hi, I'm Vishal Baraiya! The Phoenix represents how I approach my journey — adapt, rebuild, and keep moving forward. Every challenge becomes a lesson, and every lesson shapes the next thing I build.",
     aboutText2 = "Currently pursuing my B.Tech at Darshan University with a 9.24 CGPA, I work with React, Next.js, Node.js, ASP.NET Core, FastAPI, and Python. I've solved 300+ problems on LeetCode, qualified GATE 2026 (AIR 4226), and cleared TCS CodeVita.",
     phone = '+91 7383359679',
     whatsapp = profile?.whatsappUrl || profile?.whatsapp || 'https://wa.me/917383359679',

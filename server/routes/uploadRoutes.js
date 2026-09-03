@@ -68,7 +68,10 @@ router.post('/', protectAdmin, upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const token = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_CATGBuviCQq4RhlA_qE3LV93ODk97xBzp92MxANyM6xqL7A';
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) {
+      return res.status(500).json({ error: 'BLOB_READ_WRITE_TOKEN environment variable is not configured' });
+    }
     const cleanName = path.basename(req.file.originalname, path.extname(req.file.originalname))
       .replace(/[^a-zA-Z0-9_\-]/g, '_');
     const ext = path.extname(req.file.originalname).toLowerCase();

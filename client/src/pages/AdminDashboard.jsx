@@ -184,7 +184,7 @@ export const AdminDashboard = () => {
   };
 
   // --- Direct File Upload Handler (PDF or Image) ---
-  const handleFileUpload = async (e, targetFormType) => {
+  const handleFileUpload = async (e, targetFormType, uploadType = 'auto') => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -192,19 +192,26 @@ export const AdminDashboard = () => {
     try {
       const res = await uploadFileApi(file);
       if (res.success) {
-        notify(res.message || 'PDF uploaded & cover screenshot generated automatically!');
+        notify(res.message || 'File uploaded to Vercel Blob CDN successfully!');
         
         if (targetFormType === 'gallery') {
-          setGalleryForm(prev => ({
-            ...prev,
-            image: res.imageUrl || res.pdfUrl || prev.image,
-            pdfUrl: res.pdfUrl || prev.pdfUrl,
-            credentialUrl: res.pdfUrl || res.imageUrl || prev.credentialUrl
-          }));
+          if (file.type === 'application/pdf' || uploadType === 'pdf') {
+            setGalleryForm(prev => ({
+              ...prev,
+              pdfUrl: res.pdfUrl,
+              credentialUrl: res.pdfUrl,
+              image: prev.image ? prev.image : (res.imageUrl || res.pdfUrl)
+            }));
+          } else {
+            setGalleryForm(prev => ({
+              ...prev,
+              image: res.imageUrl || res.pdfUrl
+            }));
+          }
         } else if (targetFormType === 'project') {
           setProjectForm(prev => ({
             ...prev,
-            image: res.imageUrl || res.pdfUrl || prev.image
+            image: res.imageUrl || res.pdfUrl
           }));
         }
       }
@@ -864,42 +871,6 @@ export const AdminDashboard = () => {
                   )}
                 </div>
 
-                {/* Direct File Upload Dropzone */}
-                <div className="p-4 rounded-xl bg-[#0c0d14] border-2 border-dashed border-[#15D8B3]/50 text-center space-y-2 relative group hover:border-[#15D8B3]">
-                  <div className="text-xs font-mono font-bold text-[#F8FAFC]">
-                    {uploading ? 'Rendering Cover & Uploading to Vercel Blob...' : 'Upload PDF Certificate / Image'}
-                  </div>
-                  <p className="text-[10px] text-[#15D8B3] font-mono">
-                    Simply drop your PDF certificate. Page 1 screenshot &amp; PDF CDN URLs are auto-stored and auto-filled!
-                  </p>
-                  <input
-                    type="file"
-                    accept=".pdf,.png,.jpg,.jpeg,.webp"
-                    disabled={uploading}
-                    onChange={(e) => handleFileUpload(e, 'gallery')}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                </div>
-
-                {/* Auto-filled Vercel Blob CDN Preview Badge */}
-                {galleryForm.image && (
-                  <div className="p-3 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/30 flex items-center gap-3">
-                    <img
-                      src={galleryForm.image}
-                      alt="Cover Preview"
-                      className="w-12 h-12 object-contain bg-[#050508] rounded border border-white/10 p-0.5 shrink-0"
-                    />
-                    <div className="min-w-0 flex-1 space-y-0.5">
-                      <span className="text-[10px] font-mono font-bold text-[#15D8B3] block">
-                        Auto-Generated Cover Image &amp; PDF URLs Ready
-                      </span>
-                      <p className="text-[10px] font-mono text-[#F8FAFC]/60 truncate">
-                        {galleryForm.pdfUrl || galleryForm.image}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 <div>
                   <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Title *</label>
                   <input
@@ -948,26 +919,78 @@ export const AdminDashboard = () => {
                   />
                 </div>
 
+                {/* Separate Input Field 1: Cover Image + Upload Button + Eye Preview */}
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Image Cover CDN URL (Auto-filled) *</label>
-                  <input
-                    type="text" required
-                    value={galleryForm.image || ''}
-                    onChange={(e) => setGalleryForm({ ...galleryForm, image: e.target.value })}
-                    className="input-field text-xs text-[#15D8B3]"
-                    placeholder="Auto-generated on PDF upload"
-                  />
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">
+                    Image Cover Path / CDN URL *
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text" required
+                      value={galleryForm.image || ''}
+                      onChange={(e) => setGalleryForm({ ...galleryForm, image: e.target.value })}
+                      className="input-field flex-1"
+                      placeholder="/img/tcs_codevita_season13.png or Vercel Blob URL..."
+                    />
+                    <label className="px-3.5 py-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] text-xs font-mono font-bold hover:bg-[#15D8B3] hover:text-[#050508] transition-all cursor-pointer shrink-0 whitespace-nowrap">
+                      {uploading ? 'Uploading...' : 'Upload Image'}
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.webp"
+                        disabled={uploading}
+                        onChange={(e) => handleFileUpload(e, 'gallery', 'image')}
+                        className="hidden"
+                      />
+                    </label>
+                    {galleryForm.image && (
+                      <a
+                        href={galleryForm.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Preview Cover Image"
+                        className="p-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] hover:bg-[#15D8B3] hover:text-[#050508] transition-all shrink-0 flex items-center justify-center cursor-pointer"
+                      >
+                        <Eye size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
 
+                {/* Separate Input Field 2: PDF Document + Upload Button + Eye Preview */}
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">PDF Document CDN URL (Auto-filled)</label>
-                  <input
-                    type="text"
-                    value={galleryForm.pdfUrl || ''}
-                    onChange={(e) => setGalleryForm({ ...galleryForm, pdfUrl: e.target.value, credentialUrl: e.target.value })}
-                    className="input-field text-xs text-[#15D8B3]"
-                    placeholder="Auto-generated on PDF upload"
-                  />
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">
+                    PDF Document Path / CDN URL
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={galleryForm.pdfUrl || ''}
+                      onChange={(e) => setGalleryForm({ ...galleryForm, pdfUrl: e.target.value, credentialUrl: e.target.value })}
+                      className="input-field flex-1"
+                      placeholder="/pdf/tcs_codevita_season13.pdf or Vercel Blob URL..."
+                    />
+                    <label className="px-3.5 py-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] text-xs font-mono font-bold hover:bg-[#15D8B3] hover:text-[#050508] transition-all cursor-pointer shrink-0 whitespace-nowrap">
+                      {uploading ? 'Uploading...' : 'Upload PDF'}
+                      <input
+                        type="file"
+                        accept=".pdf"
+                        disabled={uploading}
+                        onChange={(e) => handleFileUpload(e, 'gallery', 'pdf')}
+                        className="hidden"
+                      />
+                    </label>
+                    {galleryForm.pdfUrl && (
+                      <a
+                        href={galleryForm.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Preview PDF Document"
+                        className="p-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] hover:bg-[#15D8B3] hover:text-[#050508] transition-all shrink-0 flex items-center justify-center cursor-pointer"
+                      >
+                        <Eye size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
@@ -1117,14 +1140,39 @@ export const AdminDashboard = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Cover Image Path</label>
-                  <input
-                    type="text"
-                    value={projectForm.image || ''}
-                    onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })}
-                    className="input-field"
-                    placeholder="/images/projects/agrosmart.png"
-                  />
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">
+                    Cover Image Path / CDN URL *
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text" required
+                      value={projectForm.image || ''}
+                      onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })}
+                      className="input-field flex-1"
+                      placeholder="/images/projects/agrosmart.png or Vercel Blob URL..."
+                    />
+                    <label className="px-3.5 py-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] text-xs font-mono font-bold hover:bg-[#15D8B3] hover:text-[#050508] transition-all cursor-pointer shrink-0 whitespace-nowrap">
+                      {uploading ? 'Uploading...' : 'Upload Image'}
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.webp"
+                        disabled={uploading}
+                        onChange={(e) => handleFileUpload(e, 'project', 'image')}
+                        className="hidden"
+                      />
+                    </label>
+                    {projectForm.image && (
+                      <a
+                        href={projectForm.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Preview Project Image"
+                        className="p-2.5 rounded-lg bg-[#0c0d14] border border-[#15D8B3]/50 text-[#15D8B3] hover:bg-[#15D8B3] hover:text-[#050508] transition-all shrink-0 flex items-center justify-center cursor-pointer"
+                      >
+                        <Eye size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -1584,10 +1632,7 @@ export const AdminDashboard = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="pt-4 border-t border-[#49A4BB]/20 flex items-center justify-between gap-4">
-                <span className="text-[11px] font-mono text-[#F8FAFC]/60">
-                  Password changes update directly in MongoDB
-                </span>
+              <div className="pt-4 border-t border-[#49A4BB]/20 flex items-center justify-end">
                 <button
                   type="submit"
                   disabled={loading}

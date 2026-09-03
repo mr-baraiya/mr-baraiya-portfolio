@@ -33,14 +33,15 @@ export const Hero = ({ profile }) => {
               <span>Available for Software Engineering Roles &amp; Projects</span>
             </div>
 
-            {/* Clean, Human-Scale Headline */}
+            {/* Headline */}
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[#F8FAFC] leading-snug">
-              Hi, I'm <span className="text-white font-bold">{name}</span> — Software Engineer building web applications, REST APIs, and developer tools.
+              Hi, I'm <span className="text-white font-bold">{name}</span>
+              <span className="block mt-1">I build, break, learn, and build better.</span>
             </h1>
 
-            {/* Natural Introduction Paragraph */}
+            {/* Personal Story relating Life to the Phoenix Bird */}
             <p className="text-sm text-[#F8FAFC]/75 max-w-xl font-normal leading-relaxed mx-auto lg:mx-0">
-              Computer Science student at Darshan University (CGPA 9.24/10). Qualified GATE 2026 in CS (AIR 4226). I build web software using React, Next.js &amp; ASP.NET Core, develop AI RAG workflows, and contribute to open source projects.
+              {profile?.bio || "My journey hasn't always been straightforward. Like the Phoenix, I’ve learned to turn setbacks into growth, adapt to every challenge, and come back stronger — one build at a time."}
             </p>
 
             {/* Tasteful Inline Credentials Strip */}

@@ -1,6 +1,6 @@
 # Mr. Baraiya - Software Engineering Portfolio
 
-Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Express.js, and MongoDB. Showcases production projects, open-source Webpack contributions, GitHub live activity, LeetCode metrics, and academic history.
+Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Express.js, MongoDB Atlas, and Vercel Blob Storage. Features a dynamic 3D Phoenix canvas representing engineering resilience and struggle, 22+ production projects, open-source Webpack contributions, GATE 2026 CS credentials, and a secure Admin Dashboard.
 
 ## Live Production Deployments
 
@@ -9,31 +9,32 @@ Full-stack developer portfolio engineered with React 19, Vite, Tailwind CSS, Exp
 
 ## Features
 
-- Dynamic Featured Projects showcase (AgroSmart, MOMS, Weather Notify AI, ImpactMeter).
-- Webpack Open-Source Merged Pull Requests showcase and dedicated details page.
-- GitHub live API integration fetching repositories, commits, and star metrics.
-- LeetCode problem-solving metrics and rating breakdown.
-- Responsive design optimized for desktop and mobile views.
-- Secure Admin Dashboard with JWT authentication for full portfolio content management.
-- Integrated contact form with email notifications.
+- **3D Phoenix Canvas**: Dynamic Three.js Phoenix model symbolizing resilience, overcoming engineering struggles, and continuous rebirth through code.
+- **Vercel Blob Storage CDN**: All project cover images, hackathon certificates, and PDF resume documents are hosted on Vercel Blob CDN for high-speed delivery.
+- **Automated PDF Cover Screenshot Generation**: Server automatically renders Page 1 of uploaded PDF certificates into crisp PNG cover images using PyMuPDF.
+- **Interactive Admin Dashboard**: Full content management for Projects, Certificates & Hackathons, Skills, Experience, and Profile with direct image/PDF uploaders and live `👁️` Eye preview buttons.
+- **Academic & Industry Credentials**: Highlighting GATE 2026 CS (AIR 4226), 9.24 CGPA at Darshan University, 500+ LeetCode solved, and Webpack open-source merged PRs.
+- **GitHub & LeetCode Live Metrics**: Real-time integration fetching live repository stars, commits, and problem-solving stats.
+- **Secure Admin Authentication**: JWT authentication with bcrypt password hashing and MongoDB Atlas persistence.
 
 ## Tech Stack
 
-- Frontend: React 19, Vite, Tailwind CSS, React Router DOM, Lucide Icons, Three.js
-- Backend: Node.js, Express.js, Mongoose, JWT, Nodemailer, bcryptjs
-- Database: MongoDB Atlas / Local MongoDB
-- Deployment: Vercel (Frontend & Serverless Backend API)
+- **Frontend**: React 19, Vite, Tailwind CSS, React Router DOM, Lucide Icons, Three.js / React Three Fiber
+- **Backend**: Node.js, Express.js, Mongoose, Multer, PyMuPDF (PDF rendering), JWT, Nodemailer
+- **Storage**: Vercel Blob Storage CDN
+- **Database**: MongoDB Atlas
+- **Deployment**: Vercel (Frontend & Serverless Backend API)
 
 ## Environment Variables
 
 ### Server (`server/.env`)
 
-Set up a `.env` file in the `server` directory:
-
 ```env
 PORT=5000
 NODE_ENV=production
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.r4bt2.mongodb.net/portfolio_db
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.aig5i.mongodb.net/portfolio
+BLOB_STORE_ID=store_CATGBuviCQq4RhlA
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_CATGBuviCQq4RhlA_...
 CLIENT_URL=https://mr-baraiya-portfolio.vercel.app
 JWT_SECRET=your_jwt_secret_key_here
 SMTP_HOST=smtp.gmail.com
@@ -44,8 +45,6 @@ ADMIN_ALERT_EMAIL=your_email@gmail.com
 ```
 
 ### Client (`client/.env`)
-
-Set up a `.env` file in the `client` directory:
 
 ```env
 VITE_API_URL=https://mr-baraiya-portfolio-server.vercel.app/api
@@ -77,4 +76,4 @@ npm run dev
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
