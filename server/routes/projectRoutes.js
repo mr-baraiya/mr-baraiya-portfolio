@@ -39,7 +39,7 @@ export const realProjectsData = [
     techStack: ['Python', 'Flask', 'Pandas', 'Plotly', 'HTML', 'CSS', 'Bootstrap', 'Jinja2'],
     githubUrl: 'https://github.com/mr-baraiya/Candle-stick-pattern-recognition-tool',
     liveUrl: 'https://candle-stick-pattern-recognition-tool-yxwg.onrender.com/',
-    featured: true
+    featured: false
   },
   {
     _id: 'proj-4',
@@ -51,7 +51,7 @@ export const realProjectsData = [
     techStack: ['React.js', 'Tailwind CSS', 'Node.js', 'Express.js', 'Python', 'FastAPI', 'MongoDB', 'MQTT', 'REST API', 'Chart.js', 'Google Maps API', 'AI', 'CNN'],
     githubUrl: 'https://github.com/mr-baraiya/Smart-Waste-Management-System',
     liveUrl: 'https://smart-waste-management-system-ruby.vercel.app/',
-    featured: true
+    featured: false
   },
   {
     _id: 'proj-5',
@@ -75,7 +75,7 @@ export const realProjectsData = [
     techStack: ['React', 'Vite', 'Tailwind CSS', 'Firebase', 'Spotify API', 'Jamendo API', 'YouTube API', 'Framer Motion', 'Vercel'],
     githubUrl: 'https://github.com/mr-baraiya/VMusic',
     liveUrl: 'https://v-music-gamma.vercel.app/',
-    featured: true
+    featured: false
   },
   {
     _id: 'proj-7',
@@ -87,7 +87,7 @@ export const realProjectsData = [
     techStack: ['React', 'Vite', 'Tailwind CSS', 'React Router', 'Razorpay', 'EmailJS', 'Framer Motion', 'Three.js', 'GSAP', 'Axios'],
     githubUrl: 'https://github.com/mr-baraiya/shoapeasy-store',
     liveUrl: 'https://shopeasy-store.netlify.app/',
-    featured: true
+    featured: false
   },
   {
     _id: 'proj-8',
@@ -267,13 +267,12 @@ export const realProjectsData = [
     techStack: ['Python', 'FastAPI', 'React', 'Tailwind CSS', 'Scikit-Learn', 'Machine Learning', 'Render', 'Netlify'],
     githubUrl: 'https://github.com/mr-baraiya/Machine-Learning-Deep-Learning-hub/tree/main/Cardio_Project',
     liveUrl: 'https://cardiosense.netlify.app',
-    featured: true
+    featured: false
   }
 ];
 
 import { protectAdmin } from '../middleware/authMiddleware.js';
 
-// Seed or sync projects in MongoDB
 const seedProjects = async () => {
   if (mongoose.connection.readyState === 1) {
     try {
@@ -287,17 +286,6 @@ const seedProjects = async () => {
           return rest;
         }));
         console.log('[MongoDB Projects] Seeded initial projects!');
-      } else {
-        // Ensure standalone Weather Notify and PDF-to-MCQ Generator exist and titles are updated in DB
-        for (const p of realProjectsData) {
-          const { _id, ...rest } = p;
-          await Project.updateOne(
-            { $or: [{ title: p.title }, { githubUrl: p.githubUrl }] },
-            { $set: rest },
-            { upsert: true }
-          );
-        }
-        console.log('[MongoDB Projects] Synchronized latest project entries!');
       }
     } catch (err) {
       console.error('[MongoDB Projects Seed Error]:', err.message);

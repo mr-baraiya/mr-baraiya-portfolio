@@ -116,7 +116,7 @@ export function App() {
                     <Route path="/projects" element={<ProjectsPage projects={projects} />} />
                     <Route path="/journey" element={<JourneyPage experiences={experiences} />} />
                     <Route path="/experience" element={<JourneyPage experiences={experiences} />} />
-                    <Route path="/achievements" element={<AchievementsPage />} />
+                    <Route path="/achievements" element={<AchievementsPage galleryItems={galleryItems} />} />
                     <Route path="/gallery" element={<GalleryPage galleryItems={galleryItems} />} />
                     <Route path="/open-source" element={<OpenSourcePRsPage />} />
                     <Route path="/pull-requests" element={<OpenSourcePRsPage />} />

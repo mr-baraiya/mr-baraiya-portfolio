@@ -69,6 +69,17 @@ router.put('/', protectAdmin, async (req, res) => {
         profile.updatedAt = Date.now();
       }
       const saved = await profile.save();
+
+      // Sync project featured flags in MongoDB
+      if (Array.isArray(saved.featuredProjectIds) && saved.featuredProjectIds.length > 0) {
+        const Project = mongoose.model('Project');
+        await Project.updateMany({}, { $set: { featured: false } });
+        await Project.updateMany(
+          { _id: { $in: saved.featuredProjectIds } },
+          { $set: { featured: true } }
+        );
+      }
+
       return res.json(saved);
     }
     Object.assign(defaultProfile, req.body);

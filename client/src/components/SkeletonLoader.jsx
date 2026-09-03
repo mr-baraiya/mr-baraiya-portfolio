@@ -113,40 +113,88 @@ export const SkeletonGrid = ({ count = 6, Component = SkeletonProjectCard, gridC
   </div>
 );
 
-// Full Screen Cyberpunk Database App Loader
+// Simple Full Screen Skeleton Page Loader
 export const FullScreenLoader = () => (
-  <div className="fixed inset-0 z-[100] bg-[#050508] flex flex-col items-center justify-center p-6 text-center select-none font-sans">
-    <div className="relative flex items-center justify-center mb-8">
-      {/* Outer Pulse Rings */}
-      <div className="absolute w-28 h-28 rounded-full border border-[#15D8B3]/30 animate-ping" />
-      <div className="absolute w-24 h-24 rounded-full border border-[#49A4BB]/40 animate-pulse" />
-      
-      {/* Central Cyan Badge Icon */}
-      <div className="w-20 h-20 rounded-2xl bg-[#0c0d14] border border-[#15D8B3]/60 flex items-center justify-center shadow-2xl shadow-[#15D8B3]/30 backdrop-blur-md">
-        <span className="text-[#15D8B3] font-mono text-xl font-bold tracking-wider animate-pulse">
-          &lt;VB /&gt;
-        </span>
-      </div>
-    </div>
+  <div className="min-h-screen bg-[#050508] text-[#F8FAFC] flex flex-col font-sans select-none animate-pulse">
+    {/* Skeleton Navbar Header */}
+    <header className="border-b border-white/10 bg-[#050508]/80 sticky top-0 z-50 py-4 px-6 md:px-12">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Brand Logo Skeleton */}
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-white/10" />
+          <div className="h-5 w-32 bg-white/10 rounded-md" />
+        </div>
 
-    <div className="space-y-3 max-w-sm w-full">
-      <div className="flex items-center justify-between text-xs font-mono font-bold">
-        <span className="text-[#15D8B3] flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#15D8B3] animate-ping" />
-          FETCHING FROM MONGODB DATABASE
-        </span>
-        <span className="text-[#F8FAFC]/70">LIVE</span>
+        {/* Nav Items Skeleton */}
+        <div className="hidden md:flex items-center gap-8">
+          <div className="h-4 w-16 bg-white/5 rounded" />
+          <div className="h-4 w-16 bg-white/5 rounded" />
+          <div className="h-4 w-16 bg-white/5 rounded" />
+          <div className="h-4 w-16 bg-white/5 rounded" />
+          <div className="h-4 w-16 bg-white/5 rounded" />
+        </div>
+
+        {/* Button Skeleton */}
+        <div className="h-9 w-28 bg-[#15D8B3]/15 rounded-lg border border-[#15D8B3]/20" />
+      </div>
+    </header>
+
+    {/* Skeleton Main Content */}
+    <main className="flex-grow max-w-7xl mx-auto w-full px-6 md:px-12 py-10 space-y-12">
+      {/* Hero Section Skeleton */}
+      <div className="space-y-6 max-w-3xl pt-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#15D8B3]/20" />
+          <div className="h-5 w-48 bg-white/10 rounded-md" />
+        </div>
+
+        <div className="space-y-3">
+          <div className="h-10 sm:h-12 w-4/5 bg-white/10 rounded-xl" />
+          <div className="h-10 sm:h-12 w-3/5 bg-white/10 rounded-xl" />
+        </div>
+
+        <div className="space-y-2 pt-2">
+          <div className="h-4 w-full bg-white/5 rounded-md" />
+          <div className="h-4 w-4/5 bg-white/5 rounded-md" />
+          <div className="h-4 w-2/3 bg-white/5 rounded-md" />
+        </div>
+
+        <div className="flex flex-wrap gap-4 pt-4">
+          <div className="h-11 w-36 bg-[#15D8B3]/20 rounded-xl" />
+          <div className="h-11 w-36 bg-white/10 rounded-xl" />
+          <div className="h-11 w-36 bg-white/10 rounded-xl" />
+        </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-2 rounded-full bg-[#0c0d14] border border-white/10 overflow-hidden p-0.5 relative">
-        <div className="h-full bg-gradient-to-r from-[#49A4BB] via-[#15D8B3] to-[#49A4BB] rounded-full animate-pulse w-3/4" />
-      </div>
+      {/* Content Grid Skeleton */}
+      <div className="space-y-6 pt-8 border-t border-white/10">
+        <div className="flex justify-between items-end border-b border-white/10 pb-4">
+          <div className="space-y-2">
+            <div className="h-4 w-24 bg-[#15D8B3]/20 rounded" />
+            <div className="h-7 w-48 bg-white/10 rounded-lg" />
+          </div>
+          <div className="h-8 w-28 bg-white/5 rounded-lg" />
+        </div>
 
-      <p className="text-[11px] font-mono text-[#F8FAFC]/60">
-        Loading Projects, Skills, Certificates &amp; Experience...
-      </p>
-    </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-[#0c0d14] border border-white/10 rounded-xl p-5 space-y-4">
+              <div className="h-40 w-full bg-white/5 rounded-lg border border-white/5" />
+              <div className="space-y-2">
+                <div className="h-5 w-3/4 bg-white/10 rounded" />
+                <div className="h-3 w-full bg-white/5 rounded" />
+                <div className="h-3 w-4/5 bg-white/5 rounded" />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <div className="h-5 w-14 bg-[#15D8B3]/20 rounded" />
+                <div className="h-5 w-14 bg-white/5 rounded" />
+                <div className="h-5 w-14 bg-white/5 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
   </div>
 );
 
