@@ -46,6 +46,35 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// ─── Cache-Control Middleware ───────────────────────────────────────────────
+// Apply smart Cache-Control headers to read-only public GET endpoints.
+// This lets the browser and Vercel's edge cache serve stale data instantly
+// while a background revalidation request runs.
+const PUBLIC_CACHEABLE_ROUTES = [
+  '/api/profile',
+  '/api/projects',
+  '/api/skills',
+  '/api/experience',
+  '/api/gallery',
+];
+
+app.use((req, res, next) => {
+  const isPublicGet = req.method === 'GET' &&
+    PUBLIC_CACHEABLE_ROUTES.some((r) => req.path.startsWith(r));
+
+  if (isPublicGet) {
+    // Cache for 5 min; serve stale for up to 10 min while revalidating
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+  } else if (req.method === 'GET' && req.path === '/api/status') {
+    // Status endpoint is always fresh
+    res.set('Cache-Control', 'no-cache');
+  } else {
+    // Mutations and auth — never cache
+    res.set('Cache-Control', 'no-store');
+  }
+  next();
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);

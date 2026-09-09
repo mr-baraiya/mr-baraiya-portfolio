@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, X, ArrowUpRight, FileText, Award, Play, Video } from 'lucide-react';
+import CachedImage from './CachedImage';
 import { SkeletonGrid, SkeletonGalleryCard } from './SkeletonLoader';
 
 const FALLBACK_GALLERY_IMAGE = 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/img_wocs_2025_admin.png';
@@ -120,12 +121,13 @@ export const Gallery = ({ items = [] }) => {
                   onClick={() => setActiveModalItem(featuredItem)}
                   className="lg:col-span-7 bg-[#050508] p-6 sm:p-8 flex items-center justify-center relative min-h-[280px] sm:min-h-[360px] cursor-pointer overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10"
                 >
-                  <img
-                    src={featuredItem.image || FALLBACK_GALLERY_IMAGE}
+                  <CachedImage
+                    src={featuredItem.image}
                     alt={featuredItem.title}
-                    loading="lazy"
-                    onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_GALLERY_IMAGE; }}
+                    fallback={FALLBACK_GALLERY_IMAGE}
+                    eager
                     className="max-h-[320px] max-w-full w-auto h-auto object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                    shimmerClass="rounded-xl"
                   />
 
                   <div className="absolute top-4 left-4">
@@ -197,12 +199,12 @@ export const Gallery = ({ items = [] }) => {
                         onClick={() => setActiveModalItem(item)}
                         className="relative aspect-[16/10] bg-[#050508] overflow-hidden border-b border-white/10 flex items-center justify-center p-2 cursor-pointer"
                       >
-                        <img
-                          src={item.image || FALLBACK_GALLERY_IMAGE}
+                        <CachedImage
+                          src={item.image}
                           alt={item.title}
-                          loading="lazy"
-                          onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_GALLERY_IMAGE; }}
+                          fallback={FALLBACK_GALLERY_IMAGE}
                           className="max-h-full max-w-full object-contain p-1 transition-transform duration-500 group-hover:scale-[1.03]"
+                          shimmerClass="rounded-lg"
                         />
 
                         <div className="absolute top-2.5 left-2.5">
@@ -303,11 +305,11 @@ export const Gallery = ({ items = [] }) => {
                   className="group bg-[#0c0d14] border border-white/10 rounded-2xl overflow-hidden flex flex-col hover:border-[#15D8B3]/50 hover:-translate-y-1.5 transition-all duration-300 shadow-xl cursor-pointer justify-between"
                 >
                   <div className="relative aspect-[16/10] bg-[#050508] overflow-hidden border-b border-white/10">
-                    <img
+                    <CachedImage
                       src={item.image}
                       alt={item.title}
-                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      shimmerClass="rounded-none"
                     />
                     
                     <div className="absolute inset-0 bg-[#050508]/40 flex items-center justify-center group-hover:bg-[#050508]/20 transition-colors">
@@ -381,10 +383,13 @@ export const Gallery = ({ items = [] }) => {
               </div>
             ) : (
               <div className="relative bg-[#050508] rounded-xl overflow-hidden border border-white/10 p-4 flex items-center justify-center min-h-[300px]">
-                <img
-                  src={activeModalItem.image || FALLBACK_GALLERY_IMAGE}
+                <CachedImage
+                  src={activeModalItem.image}
                   alt={activeModalItem.title}
+                  fallback={FALLBACK_GALLERY_IMAGE}
+                  eager
                   className="max-h-[60vh] max-w-full object-contain"
+                  shimmerClass="rounded-lg min-h-[200px]"
                 />
               </div>
             )}

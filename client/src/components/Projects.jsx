@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Eye, X, Layers, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { SkeletonGrid, SkeletonProjectCard } from './SkeletonLoader';
+import CachedImage from './CachedImage';
 
 const FALLBACK_IMAGE = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%230c0d14"/><rect x="30" y="30" width="740" height="440" rx="16" fill="%23050508" stroke="%2315D8B3" stroke-width="2" stroke-opacity="0.3"/><text x="400" y="230" fill="%2315D8B3" font-family="monospace" font-size="28" font-weight="bold" text-anchor="middle">&lt;Vishal Baraiya /&gt;</text><text x="400" y="280" fill="%23F8FAFC" font-family="sans-serif" font-size="16" fill-opacity="0.7" text-anchor="middle">Software Engineering Project Showcase</text></svg>';
 
@@ -92,13 +93,12 @@ export const Projects = ({ projects = [] }) => {
               >
                 {/* Image Preview */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-[#050508] border-b border-white/10 flex items-center justify-center p-2">
-                  <img
-                    src={project.image || FALLBACK_IMAGE}
+                  <CachedImage
+                    src={project.image}
                     alt={project.title}
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE; }}
+                    fallback={FALLBACK_IMAGE}
                     className="w-full h-full object-contain p-1 transition-transform duration-300 group-hover:scale-[1.02]"
+                    shimmerClass="rounded-lg"
                   />
                   <div className="absolute top-2.5 left-2.5">
                     <span className="px-2.5 py-0.5 rounded bg-[#050508]/90 text-[10px] font-mono font-medium text-[#15D8B3] border border-[#15D8B3]/30">
@@ -190,12 +190,13 @@ export const Projects = ({ projects = [] }) => {
             </button>
 
             <div className="relative aspect-[16/10] bg-[#050508] rounded-lg overflow-hidden border border-white/10 p-3 flex items-center justify-center">
-              <img
-                src={activeModalProject.image || FALLBACK_IMAGE}
+              <CachedImage
+                src={activeModalProject.image}
                 alt={activeModalProject.title}
-                referrerPolicy="no-referrer"
-                onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE; }}
+                fallback={FALLBACK_IMAGE}
+                eager
                 className="max-h-full max-w-full object-contain"
+                shimmerClass="rounded-md min-h-[160px]"
               />
             </div>
 
