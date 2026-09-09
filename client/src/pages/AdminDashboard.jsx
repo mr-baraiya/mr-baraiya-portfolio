@@ -1664,9 +1664,22 @@ export const AdminDashboard = () => {
                         </button>
                       </div>
                     </div>
-                    {m.subject && (
-                      <div className="text-xs font-mono text-[#15D8B3]">Subject: {m.subject}</div>
-                    )}
+
+                    {/* Inquiry Type Badge + Subject Row */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {m.inquiryType && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold border bg-[#15D8B3]/10 text-[#15D8B3] border-[#15D8B3]/30">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#15D8B3] inline-block"></span>
+                          {m.inquiryType}
+                        </span>
+                      )}
+                      {m.subject && (
+                        <span className="text-xs font-mono text-[#F8FAFC]/70">
+                          <span className="text-[#F8FAFC]/40 mr-1">Subject:</span>{m.subject}
+                        </span>
+                      )}
+                    </div>
+
                     <p className="text-xs text-[#F8FAFC]/80 leading-relaxed font-light whitespace-pre-wrap">
                       {m.message}
                     </p>
