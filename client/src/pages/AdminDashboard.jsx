@@ -558,7 +558,7 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Desktop Navigation Tabs */}
-        <div className="hidden sm:flex border-b border-[#49A4BB]/20 gap-2 overflow-x-auto no-scrollbar flex-nowrap pb-1">
+        <div className="hidden sm:flex border-b border-[#49A4BB]/20 gap-1 overflow-x-auto pb-0 flex-nowrap" style={{scrollbarWidth:'none',msOverflowStyle:'none'}}>
           <button
             onClick={() => setActiveTab('profile')}
             className={`py-3 px-4 md:px-5 text-xs md:text-sm font-mono font-bold border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
