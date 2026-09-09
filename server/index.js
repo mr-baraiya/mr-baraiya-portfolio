@@ -103,7 +103,7 @@ app.get('/api', (req, res) => {
       { method: 'GET', path: '/api/status', category: 'System', description: 'System health, uptime, memory, and database status' },
       { method: 'GET', path: '/api/profile', category: 'Portfolio', description: 'Developer bio, CGPA, credentials, and social links' },
       { method: 'GET', path: '/api/projects', category: 'Portfolio', description: 'Full-stack projects with live demo and GitHub repository links' },
-      { method: 'GET', path: '/api/skills', category: 'Portfolio', description: '47+ seeded skills categorized by engineering domain' },
+      { method: 'GET', path: '/api/skills', category: 'Portfolio', description: 'Skills categorized by engineering domain' },
       { method: 'GET', path: '/api/experience', category: 'Portfolio', description: 'Teaching assistant roles, hackathons, and work history' },
       { method: 'GET', path: '/api/gallery', category: 'Portfolio', description: 'Certificates, Webpack open-source achievements, and scorecards' },
       { method: 'POST', path: '/api/contact', category: 'Communication', description: 'Submit contact message with automated Gmail SMTP alerts' },
