@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
-import { Cpu, Cloud, Database } from 'lucide-react';
+import { Cpu, Mail, Globe, Zap, BookOpen, Brain, Key, Server, Shield, Code2 } from 'lucide-react';
 import { SkeletonGrid, SkeletonSkillCard } from './SkeletonLoader';
 import {
-  SiJavascript, SiTypescript, SiPython, SiDotnet, SiC,
+  // Languages
+  SiJavascript, SiTypescript, SiPython, SiDotnet, SiC, SiOpenjdk,
+  SiHtml5, SiCss3,
+  // Frontend
   SiReact, SiNextdotjs, SiTailwindcss, SiBootstrap,
+  SiRedux, SiThreedotjs, SiFramer, SiVite,
+  // Backend
   SiNodedotjs, SiExpress, SiFastapi, SiNestjs, SiN8N, SiFlask,
-  SiMongodb, SiFirebase, SiSupabase,
-  SiDocker, SiGit, SiGithub, SiPostman, SiSwagger, SiVercel, SiRender,
-  SiLeetcode, SiPostgresql
+  SiGraphql, SiSocketdotio, SiPrisma,
+  // Databases & Cloud
+  SiMongodb, SiFirebase, SiSupabase, SiMicrosoftazure, SiMicrosoftsqlserver,
+  SiPostgresql, SiRedis, SiAmazons3,
+  // Deployment
+  SiVercel, SiRender, SiNetlify, SiRailway, SiCloudflare,
+  // DevOps & Tools
+  SiDocker, SiGit, SiGithub, SiPostman, SiSwagger,
+  SiGithubactions, SiLinux, SiGnubash, SiVisualstudiocode, SiFigma, SiWebpack, SiKubernetes,
+  // AI & ML
+  SiOpenai, SiHuggingface, SiLangchain, SiNumpy, SiPandas,
+  // Coursework
+  SiLeetcode,
 } from 'react-icons/si';
 
 export const Skills = ({ skills = [] }) => {
@@ -23,52 +38,107 @@ export const Skills = ({ skills = [] }) => {
       return cat.includes(active) || active.includes(cat);
     });
 
-  // Helper function for Official Technology Icons with Brand Colors
+  // Official Technology Icons with Brand Colors
   const getOfficialTechIcon = (name = '') => {
     const n = name.toLowerCase();
 
-    // Languages
-    if (n === 'javascript' || n.includes('javascript')) return <SiJavascript className="w-6 h-6 text-[#F7DF1E]" />;
-    if (n === 'typescript' || n.includes('typescript')) return <SiTypescript className="w-6 h-6 text-[#3178C6]" />;
-    if (n === 'python' || n.includes('python')) return <SiPython className="w-6 h-6 text-[#3776AB]" />;
-    if (n === 'c#' || n.includes('c#') || n.includes('.net') || n.includes('blazor')) return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
-    if (n === 'java' || n.includes('java')) return <SiDotnet className="w-6 h-6 text-[#ED8B00]" />;
-    if (n === 'c' || n === 'c lang') return <SiC className="w-6 h-6 text-[#A8B9CC]" />;
+    // ─── Languages ───────────────────────────────────────────────────────────
+    if (n.includes('javascript')) return <SiJavascript className="w-6 h-6 text-[#F7DF1E]" />;
+    if (n.includes('typescript')) return <SiTypescript className="w-6 h-6 text-[#3178C6]" />;
+    if (n.includes('python'))     return <SiPython className="w-6 h-6 text-[#3776AB]" />;
+    if (n.includes('java') && !n.includes('javascript')) return <SiOpenjdk className="w-6 h-6 text-[#ED8B00]" />;
+    if (n.includes('html'))       return <SiHtml5 className="w-6 h-6 text-[#E34F26]" />;
+    if (n.includes('css'))        return <SiCss3 className="w-6 h-6 text-[#1572B6]" />;
+    if (n === 'c' || n === 'c lang' || n === 'c language') return <SiC className="w-6 h-6 text-[#A8B9CC]" />;
+    if (n.includes('c#') || (n.includes('.net') && !n.includes('asp')) || n.includes('blazor')) return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
+    if (n.includes('sql') && !n.includes('sql server') && !n.includes('mssql') && !n.includes('nosql')) return <SiPostgresql className="w-6 h-6 text-[#4169E1]" />;
 
-    // Frontend
-    if (n.includes('react')) return <SiReact className="w-6 h-6 text-[#61DAFB]" />;
-    if (n.includes('next')) return <SiNextdotjs className="w-6 h-6 text-white" />;
-    if (n.includes('tailwind')) return <SiTailwindcss className="w-6 h-6 text-[#06B6D4]" />;
-    if (n.includes('bootstrap')) return <SiBootstrap className="w-6 h-6 text-[#7952B3]" />;
+    // ─── Frontend ────────────────────────────────────────────────────────────
+    if (n.includes('react') && !n.includes('native')) return <SiReact className="w-6 h-6 text-[#61DAFB]" />;
+    if (n.includes('next'))       return <SiNextdotjs className="w-6 h-6 text-white" />;
+    if (n.includes('tailwind'))   return <SiTailwindcss className="w-6 h-6 text-[#06B6D4]" />;
+    if (n.includes('bootstrap'))  return <SiBootstrap className="w-6 h-6 text-[#7952B3]" />;
+    if (n.includes('redux'))      return <SiRedux className="w-6 h-6 text-[#764ABC]" />;
+    if (n.includes('zustand') && !n.includes('redux')) return <SiRedux className="w-6 h-6 text-[#764ABC]" />;
+    if (n.includes('three'))      return <SiThreedotjs className="w-6 h-6 text-white" />;
+    if (n.includes('framer'))     return <SiFramer className="w-6 h-6 text-[#0055FF]" />;
+    if (n === 'vite')             return <SiVite className="w-6 h-6 text-[#646CFF]" />;
+    if (n.includes('shadcn'))     return <SiReact className="w-6 h-6 text-[#18181B]" />;
+    if (n.includes('asp.net mvc') || n.includes('asp.net core')) return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
+    if (n.includes('asp.net'))    return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
+    if (n.includes('emailjs'))    return <Mail className="w-6 h-6 text-[#EA4335]" />;
 
-    // Backend
-    if (n.includes('node')) return <SiNodedotjs className="w-6 h-6 text-[#5FA04E]" />;
-    if (n.includes('express')) return <SiExpress className="w-6 h-6 text-white" />;
-    if (n.includes('fastapi')) return <SiFastapi className="w-6 h-6 text-[#009688]" />;
-    if (n.includes('nest')) return <SiNestjs className="w-6 h-6 text-[#E0234E]" />;
-    if (n.includes('n8n')) return <SiN8N className="w-6 h-6 text-[#FF6584]" />;
-    if (n.includes('flask')) return <SiFlask className="w-6 h-6 text-white" />;
+    // ─── Backend ─────────────────────────────────────────────────────────────
+    if (n.includes('node'))       return <SiNodedotjs className="w-6 h-6 text-[#5FA04E]" />;
+    if (n.includes('express'))    return <SiExpress className="w-6 h-6 text-white" />;
+    if (n.includes('fastapi'))    return <SiFastapi className="w-6 h-6 text-[#009688]" />;
+    if (n.includes('nest'))       return <SiNestjs className="w-6 h-6 text-[#E0234E]" />;
+    if (n.includes('n8n'))        return <SiN8N className="w-6 h-6 text-white" />;
+    if (n.includes('flask'))      return <SiFlask className="w-6 h-6 text-white" />;
+    if (n.includes('graphql'))    return <SiGraphql className="w-6 h-6 text-[#E10098]" />;
+    if (n.includes('socket'))     return <SiSocketdotio className="w-6 h-6 text-white" />;
+    if (n.includes('prisma'))     return <SiPrisma className="w-6 h-6 text-[#5A67D8]" />;
+    if (n.includes('websocket'))  return <Zap className="w-6 h-6 text-[#F59E0B]" />;
+    if (n.includes('rest api'))   return <Globe className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('rest apis'))  return <Globe className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('jwt') || n.includes('oauth')) return <Key className="w-6 h-6 text-[#F59E0B]" />;
+    if (n.includes('nodemailer')) return <Mail className="w-6 h-6 text-[#15D8B3]" />;
 
-    // Databases & Cloud
-    if (n.includes('mongo')) return <SiMongodb className="w-6 h-6 text-[#47A248]" />;
-    if (n.includes('sql server') || n.includes('sql')) return <Database className="w-6 h-6 text-[#CC292B]" />;
-    if (n.includes('azure')) return <Cloud className="w-6 h-6 text-[#0089D6]" />;
-    if (n.includes('firebase')) return <SiFirebase className="w-6 h-6 text-[#FFCA28]" />;
-    if (n.includes('supabase')) return <SiSupabase className="w-6 h-6 text-[#3ECF8E]" />;
-    if (n.includes('postgres')) return <SiPostgresql className="w-6 h-6 text-[#4169E1]" />;
+    // ─── Databases & Cloud ───────────────────────────────────────────────────
+    if (n.includes('mongo'))      return <SiMongodb className="w-6 h-6 text-[#47A248]" />;
+    if (n.includes('sql server') || n.includes('mssql')) return <SiMicrosoftsqlserver className="w-6 h-6 text-[#CC2927]" />;
+    if (n.includes('azure'))      return <SiMicrosoftazure className="w-6 h-6 text-[#0089D6]" />;
+    if (n.includes('firebase'))   return <SiFirebase className="w-6 h-6 text-[#FFCA28]" />;
+    if (n.includes('supabase'))   return <SiSupabase className="w-6 h-6 text-[#3ECF8E]" />;
+    if (n.includes('postgres'))   return <SiPostgresql className="w-6 h-6 text-[#4169E1]" />;
+    if (n.includes('redis'))      return <SiRedis className="w-6 h-6 text-[#DC382D]" />;
+    if (n.includes('aws') || n.includes('s3')) return <SiAmazons3 className="w-6 h-6 text-[#FF9900]" />;
+    if (n.includes('vercel blob')) return <SiVercel className="w-6 h-6 text-white" />;
 
-    // DevOps & Tools
-    if (n.includes('docker')) return <SiDocker className="w-6 h-6 text-[#2496ED]" />;
-    if (n.includes('git')) return <SiGit className="w-6 h-6 text-[#F05032]" />;
-    if (n.includes('github')) return <SiGithub className="w-6 h-6 text-white" />;
-    if (n.includes('postman')) return <SiPostman className="w-6 h-6 text-[#FF6C37]" />;
-    if (n.includes('swagger')) return <SiSwagger className="w-6 h-6 text-[#85EA2D]" />;
-    if (n.includes('vercel')) return <SiVercel className="w-6 h-6 text-white" />;
-    if (n.includes('render')) return <SiRender className="w-6 h-6 text-white" />;
+    // ─── Deployment ──────────────────────────────────────────────────────────
+    if (n.includes('vercel'))     return <SiVercel className="w-6 h-6 text-white" />;
+    if (n.includes('render'))     return <SiRender className="w-6 h-6 text-white" />;
+    if (n.includes('netlify'))    return <SiNetlify className="w-6 h-6 text-[#00C7B7]" />;
+    if (n.includes('railway'))    return <SiRailway className="w-6 h-6 text-white" />;
+    if (n.includes('cloudflare')) return <SiCloudflare className="w-6 h-6 text-[#F38020]" />;
+    if (n.includes('smartasp'))   return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
 
-    // Coursework
-    if (n.includes('data structures') || n.includes('dsa') || n.includes('leetcode')) return <SiLeetcode className="w-6 h-6 text-[#FFA116]" />;
+    // ─── DevOps & Tools ──────────────────────────────────────────────────────
+    if (n.includes('kubernetes') || n === 'k8s') return <SiKubernetes className="w-6 h-6 text-[#326CE5]" />;
+    if (n.includes('docker'))     return <SiDocker className="w-6 h-6 text-[#2496ED]" />;
+    if (n.includes('github actions')) return <SiGithubactions className="w-6 h-6 text-[#2088FF]" />;
+    if (n.includes('github'))     return <SiGithub className="w-6 h-6 text-white" />;
+    if (n.includes('git'))        return <SiGit className="w-6 h-6 text-[#F05032]" />;
+    if (n.includes('postman'))    return <SiPostman className="w-6 h-6 text-[#FF6C37]" />;
+    if (n.includes('swagger'))    return <SiSwagger className="w-6 h-6 text-[#85EA2D]" />;
+    if (n.includes('linux'))      return <SiLinux className="w-6 h-6 text-[#FCC624]" />;
+    if (n.includes('bash'))       return <SiGnubash className="w-6 h-6 text-[#4EAA25]" />;
+    if (n.includes('vs code') || n.includes('vscode')) return <SiVisualstudiocode className="w-6 h-6 text-[#007ACC]" />;
+    if (n.includes('figma'))      return <SiFigma className="w-6 h-6 text-[#F24E1E]" />;
+    if (n.includes('webpack'))    return <SiWebpack className="w-6 h-6 text-[#8DD6F9]" />;
 
+    // ─── AI & ML ─────────────────────────────────────────────────────────────
+    if (n.includes('langchain'))  return <SiLangchain className="w-6 h-6 text-[#1C3C3C]" style={{ filter: 'invert(1) brightness(2)' }} />;
+    if (n.includes('openai'))     return <SiOpenai className="w-6 h-6 text-white" />;
+    if (n.includes('hugging') || n.includes('huggingface')) return <SiHuggingface className="w-6 h-6 text-[#FFD21E]" />;
+    if (n.includes('numpy'))      return <SiNumpy className="w-6 h-6 text-[#4DABCF]" />;
+    if (n.includes('pandas'))     return <SiPandas className="w-6 h-6 text-[#E70488]" />;
+    if (n.includes('faiss') || n.includes('chroma') || n.includes('chromadb')) return <Brain className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('tensorflow') || n.includes('pytorch')) return <Brain className="w-6 h-6 text-[#FF6F00]" />;
+
+    // ─── Coursework (generic academic topics) ────────────────────────────────
+    if (n.includes('leetcode'))   return <SiLeetcode className="w-6 h-6 text-[#FFA116]" />;
+    if (n.includes('data structures') || n.includes('dsa') || n.includes('algorithms')) return <SiLeetcode className="w-6 h-6 text-[#FFA116]" />;
+    if (n.includes('machine learning') || n.includes('ml')) return <Brain className="w-6 h-6 text-[#FF6F00]" />;
+    if (n.includes('dbms') || n.includes('database management')) return <SiPostgresql className="w-6 h-6 text-[#336791]" />;
+    if (n.includes('operating system') || n.includes('os')) return <SiLinux className="w-6 h-6 text-[#FCC624]" />;
+    if (n.includes('network'))    return <Globe className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('oop') || n.includes('object oriented')) return <Code2 className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('compiler') || n.includes('theory of computation') || n.includes('toc')) return <Code2 className="w-6 h-6 text-[#A855F7]" />;
+    if (n.includes('software engineering')) return <Code2 className="w-6 h-6 text-[#15D8B3]" />;
+    if (n.includes('discrete')) return <BookOpen className="w-6 h-6 text-[#15D8B3]" />;
+
+    // ─── Default Fallback ────────────────────────────────────────────────────
     return <Cpu className="w-6 h-6 text-[#15D8B3]" />;
   };
 
