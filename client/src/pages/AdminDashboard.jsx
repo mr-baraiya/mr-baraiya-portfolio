@@ -134,7 +134,7 @@ export const AdminDashboard = () => {
   });
 
   const [skillForm, setSkillForm] = useState({
-    name: '', category: 'Frontend', proficiency: 90, color: '#15D8B3', icon: 'Code'
+    name: '', category: 'Frontend', proficiency: 90, color: '#15D8B3', icon: 'Code', description: ''
   });
 
   const [experienceForm, setExperienceForm] = useState({
@@ -383,21 +383,23 @@ export const AdminDashboard = () => {
 
     try {
       const payload = {
-        name: skillForm.name,
+        name: skillForm.name.trim(),
         category: skillForm.category || 'Frontend',
-        proficiency: 90,
-        color: '#15D8B3',
-        icon: 'Code'
+        proficiency: Number(skillForm.proficiency) || 90,
+        color: skillForm.color || '#15D8B3',
+        icon: skillForm.icon || 'Code',
+        description: skillForm.description || '',
+        featured: true,
       };
       if (editingSkill) {
         await updateSkillApi(editingSkill._id, payload);
-        notify('Skill updated!');
+        notify('Skill updated successfully in MongoDB!');
       } else {
         await addSkillApi(payload);
-        notify('New skill added!');
+        notify('New skill added to database!');
       }
       setEditingSkill(null);
-      setSkillForm({ name: '', category: 'Frontend' });
+      setSkillForm({ name: '', category: 'Frontend', proficiency: 90, color: '#15D8B3', icon: 'Code', description: '' });
       loadAllData();
     } catch (err) {
       alert(err.error || 'Failed to save skill');
@@ -408,15 +410,23 @@ export const AdminDashboard = () => {
     setEditingSkill(s);
     setSkillForm({
       name: s.name,
-      category: s.category
+      category: s.category,
+      proficiency: s.proficiency ?? 90,
+      color: s.color || '#15D8B3',
+      icon: s.icon || 'Code',
+      description: s.description || '',
     });
   };
 
   const handleDeleteSkill = async (id) => {
-    if (confirm('Delete this skill?')) {
-      await deleteSkillApi(id);
-      notify('Skill deleted!');
-      loadAllData();
+    if (confirm('Delete this skill from the database?')) {
+      try {
+        await deleteSkillApi(id);
+        notify('Skill deleted successfully!');
+        loadAllData();
+      } catch (err) {
+        alert(err.error || 'Failed to delete skill');
+      }
     }
   };
 
@@ -1351,23 +1361,78 @@ export const AdminDashboard = () => {
                   />
                 </div>
 
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Category</label>
+                    <select
+                      value={skillForm.category || 'Frontend'}
+                      onChange={(e) => setSkillForm({ ...skillForm, category: e.target.value })}
+                      className="input-field bg-[#050508]"
+                    >
+                      <option value="Languages">Languages</option>
+                      <option value="Frontend">Frontend</option>
+                      <option value="Backend">Backend</option>
+                      <option value="Databases & Cloud">Databases &amp; Cloud</option>
+                      <option value="AI & ML">AI &amp; ML</option>
+                      <option value="DevOps & Tools">DevOps &amp; Tools</option>
+                      <option value="Coursework">Coursework</option>
+                      <option value="Deployment">Deployment</option>
+                      <option value="Tools & DevOps">Tools &amp; DevOps</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Proficiency (0–100)</label>
+                    <input
+                      type="number"
+                      min="0" max="100"
+                      value={skillForm.proficiency ?? 90}
+                      onChange={(e) => setSkillForm({ ...skillForm, proficiency: e.target.value })}
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Icon Name</label>
+                    <select
+                      value={skillForm.icon || 'Code'}
+                      onChange={(e) => setSkillForm({ ...skillForm, icon: e.target.value })}
+                      className="input-field bg-[#050508]"
+                    >
+                      <option value="Code">Code</option>
+                      <option value="Layers">Layers</option>
+                      <option value="Cpu">Cpu</option>
+                      <option value="Globe">Globe</option>
+                      <option value="Database">Database</option>
+                      <option value="Mail">Mail</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Color (hex)</label>
+                    <input
+                      type="text"
+                      value={skillForm.color || '#15D8B3'}
+                      onChange={(e) => setSkillForm({ ...skillForm, color: e.target.value })}
+                      className="input-field font-mono"
+                      placeholder="#15D8B3"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Skill Category</label>
-                  <select
-                    value={skillForm.category || 'Frontend'}
-                    onChange={(e) => setSkillForm({ ...skillForm, category: e.target.value })}
-                    className="input-field bg-[#050508]"
-                  >
-                    <option value="Frontend">Frontend</option>
-                    <option value="Backend">Backend</option>
-                    <option value="Database">Database</option>
-                    <option value="DevOps & Tools">DevOps & Tools</option>
-                    <option value="Languages">Languages</option>
-                  </select>
+                  <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Description</label>
+                  <input
+                    type="text"
+                    value={skillForm.description || ''}
+                    onChange={(e) => setSkillForm({ ...skillForm, description: e.target.value })}
+                    className="input-field"
+                    placeholder="Short description of this skill..."
+                  />
                 </div>
 
                 <button type="submit" className="w-full py-3 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-xs hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20">
-                  {editingSkill ? 'Update Skill' : 'Save Skill to Database'}
+                  {editingSkill ? 'Update Skill in Database' : 'Save Skill to Database'}
                 </button>
               </form>
             </div>
@@ -1376,7 +1441,7 @@ export const AdminDashboard = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#49A4BB]/20 pb-3">
                 <h3 className="text-base font-bold text-white">Database Skills ({filteredSkills.length})</h3>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {['ALL', 'Frontend', 'Backend', 'Database', 'DevOps & Tools', 'Languages'].map((cat) => (
+                  {['ALL', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools', 'Tools & DevOps', 'Coursework'].map((cat) => (
                     <button
                       key={cat}
                       type="button"

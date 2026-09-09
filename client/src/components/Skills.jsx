@@ -13,7 +13,7 @@ import {
 export const Skills = ({ skills = [] }) => {
   const [activeTab, setActiveTab] = useState('All');
 
-  const categories = ['All', 'Coursework', 'Languages', 'Frontend', 'Backend', 'Database', 'Deployment', 'DevOps & Tools'];
+  const categories = ['All', 'Coursework', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools', 'Tools & DevOps'];
 
   const filteredSkills = activeTab === 'All'
     ? skills
