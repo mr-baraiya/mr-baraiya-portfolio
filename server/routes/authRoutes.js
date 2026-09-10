@@ -193,6 +193,15 @@ router.post('/reset-password', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid or expired password reset token' });
     }
 
+    // Check if new password is identical to the current/previous password
+    const isSamePassword = await user.comparePassword(newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'New password cannot be the same as your previous password. Please choose a different password.'
+      });
+    }
+
     // Update password (will be hashed with bcryptjs by pre-save hook)
     user.password = newPassword;
     user.resetPasswordToken = undefined;
@@ -254,6 +263,15 @@ router.put('/change-password', protectAdmin, async (req, res) => {
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
       return res.status(400).json({ success: false, error: 'Incorrect current password. Please check and try again.' });
+    }
+
+    // Check if new password is identical to current/previous password
+    const isSamePassword = await user.comparePassword(newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'New password cannot be the same as your previous password. Please choose a different password.'
+      });
     }
 
     // Update password (User pre-save hook will hash it)

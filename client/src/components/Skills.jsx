@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Cpu, Mail, Globe, Zap, BookOpen, Brain, Key, Server, Shield, Code2 } from 'lucide-react';
+import { Cpu, Mail, Globe, Zap, BookOpen, Brain, Key, Server, Shield, Code2, Cloud } from 'lucide-react';
+import { VscVscode } from 'react-icons/vsc';
 import { SkeletonGrid, SkeletonSkillCard } from './SkeletonLoader';
 import {
   // Languages
   SiJavascript, SiTypescript, SiPython, SiDotnet, SiC, SiOpenjdk,
-  SiHtml5, SiCss3,
+  SiHtml5, SiCss,
   // Frontend
   SiReact, SiNextdotjs, SiTailwindcss, SiBootstrap,
   SiRedux, SiThreedotjs, SiFramer, SiVite,
@@ -12,15 +13,15 @@ import {
   SiNodedotjs, SiExpress, SiFastapi, SiNestjs, SiN8N, SiFlask,
   SiGraphql, SiSocketdotio, SiPrisma,
   // Databases & Cloud
-  SiMongodb, SiFirebase, SiSupabase, SiMicrosoftazure, SiMicrosoftsqlserver,
-  SiPostgresql, SiRedis, SiAmazons3,
+  SiMongodb, SiFirebase, SiSupabase,
+  SiPostgresql, SiRedis,
   // Deployment
   SiVercel, SiRender, SiNetlify, SiRailway, SiCloudflare,
   // DevOps & Tools
   SiDocker, SiGit, SiGithub, SiPostman, SiSwagger,
-  SiGithubactions, SiLinux, SiGnubash, SiVisualstudiocode, SiFigma, SiWebpack, SiKubernetes,
+  SiGithubactions, SiLinux, SiGnubash, SiFigma, SiWebpack, SiKubernetes,
   // AI & ML
-  SiOpenai, SiHuggingface, SiLangchain, SiNumpy, SiPandas,
+  SiHuggingface, SiLangchain, SiNumpy, SiPandas,
   // Coursework
   SiLeetcode,
 } from 'react-icons/si';
@@ -28,13 +29,16 @@ import {
 export const Skills = ({ skills = [] }) => {
   const [activeTab, setActiveTab] = useState('All');
 
-  const categories = ['All', 'Coursework', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools', 'Tools & DevOps'];
+  const categories = ['All', 'Coursework', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools'];
 
   const filteredSkills = activeTab === 'All'
     ? skills
     : skills.filter(s => {
-      const cat = (s.category || '').toLowerCase();
-      const active = activeTab.toLowerCase();
+      const cat = (s.category || '').toLowerCase().trim();
+      const active = activeTab.toLowerCase().trim();
+      if (active === 'devops & tools' || active === 'tools & devops') {
+        return cat === 'devops & tools' || cat === 'tools & devops';
+      }
       return cat.includes(active) || active.includes(cat);
     });
 
@@ -48,7 +52,7 @@ export const Skills = ({ skills = [] }) => {
     if (n.includes('python'))     return <SiPython className="w-6 h-6 text-[#3776AB]" />;
     if (n.includes('java') && !n.includes('javascript')) return <SiOpenjdk className="w-6 h-6 text-[#ED8B00]" />;
     if (n.includes('html'))       return <SiHtml5 className="w-6 h-6 text-[#E34F26]" />;
-    if (n.includes('css'))        return <SiCss3 className="w-6 h-6 text-[#1572B6]" />;
+    if (n.includes('css'))        return <SiCss className="w-6 h-6 text-[#1572B6]" />;
     if (n === 'c' || n === 'c lang' || n === 'c language') return <SiC className="w-6 h-6 text-[#A8B9CC]" />;
     if (n.includes('c#') || (n.includes('.net') && !n.includes('asp')) || n.includes('blazor')) return <SiDotnet className="w-6 h-6 text-[#512BD4]" />;
     if (n.includes('sql') && !n.includes('sql server') && !n.includes('mssql') && !n.includes('nosql')) return <SiPostgresql className="w-6 h-6 text-[#4169E1]" />;
@@ -86,13 +90,13 @@ export const Skills = ({ skills = [] }) => {
 
     // ─── Databases & Cloud ───────────────────────────────────────────────────
     if (n.includes('mongo'))      return <SiMongodb className="w-6 h-6 text-[#47A248]" />;
-    if (n.includes('sql server') || n.includes('mssql')) return <SiMicrosoftsqlserver className="w-6 h-6 text-[#CC2927]" />;
-    if (n.includes('azure'))      return <SiMicrosoftazure className="w-6 h-6 text-[#0089D6]" />;
+    if (n.includes('sql server') || n.includes('mssql')) return <Server className="w-6 h-6 text-[#CC2927]" />;
+    if (n.includes('azure'))      return <Cloud className="w-6 h-6 text-[#0089D6]" />;
     if (n.includes('firebase'))   return <SiFirebase className="w-6 h-6 text-[#FFCA28]" />;
     if (n.includes('supabase'))   return <SiSupabase className="w-6 h-6 text-[#3ECF8E]" />;
     if (n.includes('postgres'))   return <SiPostgresql className="w-6 h-6 text-[#4169E1]" />;
     if (n.includes('redis'))      return <SiRedis className="w-6 h-6 text-[#DC382D]" />;
-    if (n.includes('aws') || n.includes('s3')) return <SiAmazons3 className="w-6 h-6 text-[#FF9900]" />;
+    if (n.includes('aws') || n.includes('s3')) return <Server className="w-6 h-6 text-[#FF9900]" />;
     if (n.includes('vercel blob')) return <SiVercel className="w-6 h-6 text-white" />;
 
     // ─── Deployment ──────────────────────────────────────────────────────────
@@ -113,13 +117,13 @@ export const Skills = ({ skills = [] }) => {
     if (n.includes('swagger'))    return <SiSwagger className="w-6 h-6 text-[#85EA2D]" />;
     if (n.includes('linux'))      return <SiLinux className="w-6 h-6 text-[#FCC624]" />;
     if (n.includes('bash'))       return <SiGnubash className="w-6 h-6 text-[#4EAA25]" />;
-    if (n.includes('vs code') || n.includes('vscode')) return <SiVisualstudiocode className="w-6 h-6 text-[#007ACC]" />;
+    if (n.includes('vs code') || n.includes('vscode')) return <VscVscode className="w-6 h-6 text-[#007ACC]" />;
     if (n.includes('figma'))      return <SiFigma className="w-6 h-6 text-[#F24E1E]" />;
     if (n.includes('webpack'))    return <SiWebpack className="w-6 h-6 text-[#8DD6F9]" />;
 
     // ─── AI & ML ─────────────────────────────────────────────────────────────
     if (n.includes('langchain'))  return <SiLangchain className="w-6 h-6 text-[#1C3C3C]" style={{ filter: 'invert(1) brightness(2)' }} />;
-    if (n.includes('openai'))     return <SiOpenai className="w-6 h-6 text-white" />;
+    if (n.includes('openai'))     return <Brain className="w-6 h-6 text-white" />;
     if (n.includes('hugging') || n.includes('huggingface')) return <SiHuggingface className="w-6 h-6 text-[#FFD21E]" />;
     if (n.includes('numpy'))      return <SiNumpy className="w-6 h-6 text-[#4DABCF]" />;
     if (n.includes('pandas'))     return <SiPandas className="w-6 h-6 text-[#E70488]" />;
@@ -148,7 +152,7 @@ export const Skills = ({ skills = [] }) => {
 
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-[#49A4BB]/20 pb-8">
-          <div className="space-y-2">
+          <div className="space-y-2 shrink-0">
             <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#15D8B3]">
               <Cpu className="w-3.5 h-3.5 text-[#15D8B3]" />
               <span>Technical Skills</span>
@@ -159,12 +163,12 @@ export const Skills = ({ skills = [] }) => {
           </div>
 
           {/* Desktop Category Filter Tabs */}
-          <div className="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <div className="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 min-w-0 max-w-full justify-start md:justify-end">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveTab(cat)}
-                className={`px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 whitespace-nowrap cursor-pointer ${activeTab === cat
+                className={`px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${activeTab === cat
                     ? 'bg-[#15D8B3] text-[#050508] font-bold shadow-md'
                     : 'bg-[#050814] text-[#F8FAFC]/75 border border-[#49A4BB]/20 hover:border-[#15D8B3] hover:text-[#15D8B3]'
                   }`}

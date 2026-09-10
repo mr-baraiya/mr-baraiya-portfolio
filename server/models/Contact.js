@@ -7,6 +7,10 @@ const contactSchema = new mongoose.Schema({
   subject: { type: String, required: true, trim: true },
   message: { type: String, required: true },
   read: { type: Boolean, default: false },
+  replied: { type: Boolean, default: false },
+  replySubject: { type: String, default: '' },
+  replyMessage: { type: String, default: '' },
+  repliedAt: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -6,10 +6,10 @@ import {
   fetchProjects, addProjectApi, updateProjectApi, deleteProjectApi,
   fetchSkills, addSkillApi, updateSkillApi, deleteSkillApi,
   fetchExperience, addExperienceApi, updateExperienceApi, deleteExperienceApi,
-  fetchContactMessages, deleteContactMessage, fetchServerStatus, logoutAdmin,
+  fetchContactMessages, deleteContactMessage, replyContactMessageApi, fetchServerStatus, logoutAdmin,
   uploadFileApi, changePasswordApi
 } from '../api/apiService';
-import { Lock, Key, Eye, EyeOff, ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Lock, Key, Eye, EyeOff, ShieldCheck, CheckCircle2, AlertTriangle, CornerUpLeft, Send } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export const AdminDashboard = () => {
       errors.confirmPassword = 'New password and confirm password do not match.';
     }
     if (currentPassword && newPassword && currentPassword === newPassword) {
-      errors.newPassword = 'New password must be different from your current password.';
+      errors.newPassword = 'New password cannot be the same as your previous password. Please choose a different password.';
     }
 
     setPasswordErrors(errors);
@@ -121,6 +121,11 @@ export const AdminDashboard = () => {
   const [editingProject, setEditingProject] = useState(null);
   const [editingSkill, setEditingSkill] = useState(null);
   const [editingExperience, setEditingExperience] = useState(null);
+
+  // Reply State for Messages
+  const [replyingMsgId, setReplyingMsgId] = useState(null);
+  const [replyForm, setReplyForm] = useState({ replySubject: '', replyMessage: '' });
+  const [replySending, setReplySending] = useState(false);
 
   // Form States
   const [galleryForm, setGalleryForm] = useState({
@@ -488,12 +493,44 @@ export const AdminDashboard = () => {
     }
   };
 
-  // --- Message Handler ---
+  // --- Message Handlers ---
   const handleDeleteMessage = async (id) => {
     if (confirm('Delete message from database?')) {
       await deleteContactMessage(id);
       notify('Message deleted!');
       loadAllData();
+    }
+  };
+
+  const handleOpenReplyForm = (m) => {
+    if (replyingMsgId === m._id) {
+      setReplyingMsgId(null);
+    } else {
+      setReplyingMsgId(m._id);
+      setReplyForm({
+        replySubject: `Re: ${m.subject || 'Portfolio Inquiry'}`,
+        replyMessage: `Hi ${m.name},\n\nThank you for reaching out through my portfolio regarding "${m.subject || 'your inquiry'}".\n\n\n\nBest regards,\nVishal Baraiya (Mr. Baraiya)`
+      });
+    }
+  };
+
+  const handleSendReplySubmit = async (e, id) => {
+    e.preventDefault();
+    if (!replyForm.replyMessage || !replyForm.replyMessage.trim()) {
+      alert('Validation Error: Reply message text is required.');
+      return;
+    }
+
+    try {
+      setReplySending(true);
+      const res = await replyContactMessageApi(id, replyForm);
+      notify(res.message || `Reply email successfully sent!`);
+      setReplyingMsgId(null);
+      loadAllData();
+    } catch (err) {
+      alert(err.error || err.message || 'Failed to send reply email');
+    } finally {
+      setReplySending(false);
     }
   };
 
@@ -1377,7 +1414,6 @@ export const AdminDashboard = () => {
                       <option value="DevOps & Tools">DevOps &amp; Tools</option>
                       <option value="Coursework">Coursework</option>
                       <option value="Deployment">Deployment</option>
-                      <option value="Tools & DevOps">Tools &amp; DevOps</option>
                     </select>
                   </div>
                   <div>
@@ -1441,7 +1477,7 @@ export const AdminDashboard = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#49A4BB]/20 pb-3">
                 <h3 className="text-base font-bold text-white">Database Skills ({filteredSkills.length})</h3>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {['ALL', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools', 'Tools & DevOps', 'Coursework'].map((cat) => (
+                  {['ALL', 'Languages', 'Frontend', 'Backend', 'Databases & Cloud', 'AI & ML', 'Deployment', 'DevOps & Tools', 'Coursework'].map((cat) => (
                     <button
                       key={cat}
                       type="button"
@@ -1644,18 +1680,37 @@ export const AdminDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {messages.map((m) => (
-                  <div key={m._id} className="glass-card p-6 border-[#49A4BB]/30 space-y-3 bg-[#050508]">
-                    <div className="flex items-center justify-between border-b border-[#49A4BB]/20 pb-3">
+                  <div key={m._id} className="glass-card p-6 border-[#49A4BB]/30 space-y-4 bg-[#050508]">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#49A4BB]/20 pb-3">
                       <div>
-                        <h4 className="font-bold text-white text-base">{m.name}</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-white text-base">{m.name}</h4>
+                          {m.replied && (
+                            <span className="px-2 py-0.5 rounded bg-[#15D8B3]/10 text-[#15D8B3] border border-[#15D8B3]/30 text-[10px] font-mono font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" />
+                              REPLIED
+                            </span>
+                          )}
+                        </div>
                         <a href={`mailto:${m.email}`} className="text-xs font-mono text-[#15D8B3] hover:underline">
                           {m.email}
                         </a>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-[11px] font-mono text-[#F8FAFC]/50">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono text-[#F8FAFC]/50 mr-1">
                           {new Date(m.createdAt).toLocaleDateString()}
                         </span>
+                        <button
+                          onClick={() => handleOpenReplyForm(m)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            replyingMsgId === m._id
+                              ? 'bg-[#15D8B3] text-[#050508]'
+                              : 'bg-[#15D8B3]/10 border border-[#15D8B3]/30 text-[#15D8B3] hover:bg-[#15D8B3]/20'
+                          }`}
+                        >
+                          <CornerUpLeft className="w-3.5 h-3.5" />
+                          <span>{replyingMsgId === m._id ? 'Cancel' : 'Reply'}</span>
+                        </button>
                         <button
                           onClick={() => handleDeleteMessage(m._id)}
                           className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold hover:bg-red-500/20 transition-all cursor-pointer"
@@ -1680,9 +1735,92 @@ export const AdminDashboard = () => {
                       )}
                     </div>
 
-                    <p className="text-xs text-[#F8FAFC]/80 leading-relaxed font-light whitespace-pre-wrap">
+                    <p className="text-xs text-[#F8FAFC]/80 leading-relaxed font-light whitespace-pre-wrap bg-[#0c0d14] p-3.5 rounded-lg border border-[#49A4BB]/20">
                       {m.message}
                     </p>
+
+                    {/* Previous Sent Reply Box */}
+                    {m.replied && (
+                      <div className="p-4 rounded-xl bg-[#15D8B3]/5 border border-[#15D8B3]/30 space-y-2">
+                        <div className="flex items-center justify-between text-[11px] font-mono text-[#15D8B3] border-b border-[#15D8B3]/20 pb-2">
+                          <span className="font-bold flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#15D8B3]" /> Sent Reply to {m.email}
+                          </span>
+                          {m.repliedAt && (
+                            <span className="text-[#F8FAFC]/50">{new Date(m.repliedAt).toLocaleString()}</span>
+                          )}
+                        </div>
+                        {m.replySubject && (
+                          <p className="text-xs font-mono text-[#F8FAFC]/90 font-semibold">
+                            <span className="text-[#15D8B3] mr-1">Subject:</span>{m.replySubject}
+                          </p>
+                        )}
+                        {m.replyMessage && (
+                          <p className="text-xs text-[#F8FAFC]/80 font-light whitespace-pre-wrap leading-relaxed">{m.replyMessage}</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Inline Reply Input Form */}
+                    {replyingMsgId === m._id && (
+                      <form onSubmit={(e) => handleSendReplySubmit(e, m._id)} className="p-5 rounded-xl bg-[#0c0d14] border border-[#15D8B3]/50 space-y-4 shadow-xl">
+                        <div className="flex items-center justify-between border-b border-[#49A4BB]/20 pb-2.5">
+                          <span className="text-xs font-mono font-bold text-[#15D8B3] flex items-center gap-1.5">
+                            <CornerUpLeft className="w-4 h-4 text-[#15D8B3]" />
+                            Send Email Reply to {m.name} ({m.email})
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setReplyingMsgId(null)}
+                            className="text-xs font-mono text-[#F8FAFC]/60 hover:text-white bg-transparent border-none cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">Reply Email Subject *</label>
+                          <input
+                            type="text"
+                            required
+                            value={replyForm.replySubject}
+                            onChange={(e) => setReplyForm({ ...replyForm, replySubject: e.target.value })}
+                            className="input-field text-xs font-mono"
+                            placeholder="Email subject..."
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-mono text-[#F8FAFC]/80 block font-bold">Reply Message Content *</label>
+                          <textarea
+                            required
+                            rows="5"
+                            value={replyForm.replyMessage}
+                            onChange={(e) => setReplyForm({ ...replyForm, replyMessage: e.target.value })}
+                            className="input-field text-xs font-mono resize-none leading-relaxed"
+                            placeholder="Type your message response..."
+                          ></textarea>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 pt-2">
+                          <button
+                            type="button"
+                            onClick={() => setReplyingMsgId(null)}
+                            className="px-4 py-2 rounded-lg bg-[#050508] border border-[#49A4BB]/30 text-xs font-mono text-[#F8FAFC]/75 hover:text-white cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={replySending}
+                            className="px-5 py-2.5 rounded-lg bg-[#15D8B3] text-[#050508] font-bold text-xs hover:bg-[#12be9d] transition-all cursor-pointer border-none shadow-md shadow-[#15D8B3]/20 flex items-center gap-1.5 disabled:opacity-50"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>{replySending ? 'Sending Reply Email...' : 'Send Reply Email'}</span>
+                          </button>
+                        </div>
+                      </form>
+                    )}
                   </div>
                 ))}
               </div>

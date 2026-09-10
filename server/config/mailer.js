@@ -132,3 +132,41 @@ export const sendContactNotificationEmail = async ({ name, email, inquiryType, s
     return { success: false, error: error.message };
   }
 };
+
+// 3. Send Reply Email from Admin to Contact Sender
+export const sendContactReplyEmail = async ({ to, senderName, originalSubject, replySubject, replyMessage }) => {
+  try {
+    const transporter = createTransporter();
+
+    const bodyHtml = `
+      <p style="margin-top: 0; font-size: 15px; color: #0f172a;">Hello <strong>${senderName || 'Valued Visitor'}</strong>,</p>
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">Thank you for reaching out via <strong>Mr. Baraiya Portfolio</strong> regarding "<em>${originalSubject || 'your inquiry'}</em>".</p>
+      
+      <div style="margin-top: 20px; padding: 20px; background-color: #f8fafc; border-radius: 10px; border-left: 4px solid #0d9488; border: 1px solid #e2e8f0;">
+        <span style="font-size: 11px; color: #0d9488; text-transform: uppercase; font-weight: 700; font-family: monospace; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Response from Vishal Baraiya</span>
+        <div style="font-size: 14px; line-height: 1.7; color: #1e293b; white-space: pre-wrap;">${replyMessage}</div>
+      </div>
+
+      <p style="font-size: 13px; color: #64748b; margin-top: 24px;">If you have any further questions, feel free to reply directly to this email.</p>
+      <p style="font-size: 13px; font-weight: 700; color: #0f766e; margin-bottom: 0;">Best regards,<br/>Vishal Baraiya (Mr. Baraiya)</p>
+    `;
+
+    const mailOptions = {
+      from: `"Vishal Baraiya | Portfolio" <${process.env.SMTP_FROM}>`,
+      to,
+      replyTo: process.env.ADMIN_ALERT_EMAIL || process.env.SMTP_FROM,
+      subject: replySubject || `Re: ${originalSubject || 'Your Portfolio Inquiry'}`,
+      html: renderEmailTemplate({
+        subtitle: 'Response to Your Portfolio Message',
+        contentHtml: bodyHtml
+      })
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[SMTP Reply Success] Email reply sent to user (${to})! Message ID: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('[SMTP Reply Error]', error);
+    throw error;
+  }
+};

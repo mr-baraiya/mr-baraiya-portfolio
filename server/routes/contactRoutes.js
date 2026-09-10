@@ -1,7 +1,7 @@
 import express from 'express';
 import Contact from '../models/Contact.js';
 import mongoose from 'mongoose';
-import { sendContactNotificationEmail } from '../config/mailer.js';
+import { sendContactNotificationEmail, sendContactReplyEmail } from '../config/mailer.js';
 
 const router = express.Router();
 
@@ -96,6 +96,67 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.error('Error saving contact message:', error);
     res.status(500).json({ success: false, error: 'Failed to process message. Please try again.' });
+  }
+});
+
+// POST reply to a contact message (Admin action)
+router.post('/:id/reply', async (req, res) => {
+  try {
+    const { replySubject, replyMessage } = req.body;
+
+    if (!replyMessage || replyMessage.trim().length < 2) {
+      return res.status(400).json({ success: false, error: 'Reply message text is required (minimum 2 characters).' });
+    }
+
+    let contact;
+    if (mongoose.connection.readyState === 1) {
+      contact = await Contact.findById(req.params.id);
+    } else {
+      contact = fallbackMessages.find(m => m._id === req.params.id);
+    }
+
+    if (!contact) {
+      return res.status(404).json({ success: false, error: 'Contact message not found.' });
+    }
+
+    const finalSubject = replySubject && replySubject.trim() !== ''
+      ? replySubject.trim()
+      : `Re: ${contact.subject || 'Portfolio Inquiry'}`;
+
+    // Send Email to the visitor who submitted the form
+    await sendContactReplyEmail({
+      to: contact.email,
+      senderName: contact.name,
+      originalSubject: contact.subject,
+      replySubject: finalSubject,
+      replyMessage: replyMessage.trim()
+    });
+
+    // Update record status in DB
+    if (mongoose.connection.readyState === 1) {
+      contact.replied = true;
+      contact.replySubject = finalSubject;
+      contact.replyMessage = replyMessage.trim();
+      contact.repliedAt = new Date();
+      contact.read = true;
+      await contact.save();
+    } else {
+      contact.replied = true;
+      contact.replySubject = finalSubject;
+      contact.replyMessage = replyMessage.trim();
+      contact.repliedAt = new Date();
+      contact.read = true;
+    }
+
+    return res.json({
+      success: true,
+      message: `Reply email successfully sent to ${contact.email}!`,
+      data: contact
+    });
+
+  } catch (error) {
+    console.error('Error replying to contact message:', error);
+    res.status(500).json({ success: false, error: error.message || 'Failed to send reply email.' });
   }
 });
 

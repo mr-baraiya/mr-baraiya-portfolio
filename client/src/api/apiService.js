@@ -291,6 +291,16 @@ export const deleteContactMessage = async (id) => {
   }
 };
 
+export const replyContactMessageApi = async (id, replyData) => {
+  try {
+    const response = await axios.post(`${API_BASE}/contact/${id}/reply`, replyData, getAuthHeaders());
+    return response.data;
+  } catch (error) {
+    console.error('Error sending reply email:', error);
+    throw error.response?.data || { success: false, error: 'Failed to send reply email' };
+  }
+};
+
 export const fetchServerStatus = async () => {
   try {
     const response = await axios.get(`${API_BASE}/status`);
