@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Skill from '../models/Skill.js';
 import { protectAdmin } from '../middleware/authMiddleware.js';
 
@@ -18,7 +19,10 @@ router.get('/', async (req, res) => {
 // POST new skill (Protected)
 router.post('/', protectAdmin, async (req, res) => {
   try {
-    const skill = new Skill(req.body);
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.__v;
+    const skill = new Skill(payload);
     const saved = await skill.save();
     return res.status(201).json(saved);
   } catch (error) {
@@ -29,7 +33,16 @@ router.post('/', protectAdmin, async (req, res) => {
 // PUT update skill (Protected)
 router.put('/:id', protectAdmin, async (req, res) => {
   try {
-    const updated = await Skill.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { id } = req.params;
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.__v;
+    let updated;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      updated = await Skill.findByIdAndUpdate(id, payload, { new: true });
+    } else {
+      updated = await Skill.findOneAndUpdate({ _id: id }, payload, { new: true, upsert: true });
+    }
     return res.json(updated);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -39,7 +52,12 @@ router.put('/:id', protectAdmin, async (req, res) => {
 // DELETE skill (Protected)
 router.delete('/:id', protectAdmin, async (req, res) => {
   try {
-    await Skill.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      await Skill.findByIdAndDelete(id);
+    } else {
+      await Skill.deleteOne({ _id: id });
+    }
     return res.json({ message: 'Skill deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -148,6 +148,35 @@ export const AdminDashboard = ({ refreshData }) => {
     type: 'Work', description: '', highlights: ''
   });
 
+  const defaultProfileDefaults = {
+    name: 'Vishal Baraiya',
+    role: 'Software Engineer & CS Student | Web Development, AI/ML & DevOps',
+    statusBadge: 'Available for full-time, part-time & freelance opportunities',
+    bio: 'Computer Science student at Darshan University (9.24 CGPA). I build web applications, explore AI/ML RAG pipelines, and share what I learn through teaching.',
+    aboutText1: "Hi, I'm Vishal Baraiya! I'm a Computer Science student and software developer based in Botad, Gujarat. I love building practical software solutions — from responsive web apps and REST APIs to AI-driven automation workflows.",
+    aboutText2: "Currently pursuing my B.Tech at Darshan University with a 9.24 CGPA, I work with React, Next.js, Node.js, ASP.NET Core, FastAPI, and Python. I've solved 300+ problems on LeetCode, qualified GATE 2026 (AIR 4226), and cleared TCS CodeVita.",
+    email: 'baraiyavishalbhai32@gmail.com',
+    phone: '+91 7383359679',
+    location: 'Botad, Gujarat, India - 364710 (Open to Remote)',
+    resumeUrl: 'https://catgbuvicqq4rhla.public.blob.vercel-storage.com/Vishal_Baraiya_Resume.pdf',
+    education: 'B.Tech CSE - Darshan University (CGPA 9.24/10)',
+    githubUrl: 'https://github.com/mr-baraiya',
+    linkedinUrl: 'https://www.linkedin.com/in/baraiya-vishalbhai/',
+    leetcodeUrl: 'https://leetcode.com/u/mr_baraiya/',
+    codechefUrl: 'https://www.codechef.com/users/mr_baraiya',
+    kaggleUrl: 'https://www.kaggle.com/vishalbaraiya1014',
+    hackerrankUrl: 'https://www.hackerrank.com/profile/h23010101014',
+    huggingfaceUrl: 'https://huggingface.co/mr-baraiya',
+    twitterUrl: 'https://x.com/baraiya1014',
+    youtubeUrl: 'https://www.youtube.com/@Vi.685_junior',
+    instagramUrl: 'https://www.instagram.com/vishalbaraiya_1014/',
+    whatsappUrl: 'https://wa.me/917383359679',
+    projectsCompleted: '21+',
+    yearsExperience: '2+',
+    uptimeStats: '100%',
+    featuredProjectIds: ['proj-13', 'proj-12', 'proj-19', 'proj-16']
+  };
+
   const loadAllData = async () => {
     setLoading(true);
     try {
@@ -161,7 +190,11 @@ export const AdminDashboard = ({ refreshData }) => {
         fetchServerStatus()
       ]);
 
-      if (profData) setProfile(profData);
+      if (profData && Object.keys(profData).length > 0) {
+        setProfile(prev => ({ ...defaultProfileDefaults, ...profData }));
+      } else {
+        setProfile(defaultProfileDefaults);
+      }
       setGallery(galData || []);
       setProjects(projData || []);
       setSkills(skillData || []);

@@ -117,7 +117,10 @@ router.post('/sync-youtube', protectAdmin, async (req, res) => {
 // POST new gallery item (Protected)
 router.post('/', protectAdmin, async (req, res) => {
   try {
-    const item = new Gallery(req.body);
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.__v;
+    const item = new Gallery(payload);
     const saved = await item.save();
     return res.status(201).json(saved);
   } catch (error) {
@@ -128,7 +131,16 @@ router.post('/', protectAdmin, async (req, res) => {
 // PUT update gallery item (Protected)
 router.put('/:id', protectAdmin, async (req, res) => {
   try {
-    const updated = await Gallery.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { id } = req.params;
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.__v;
+    let updated;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      updated = await Gallery.findByIdAndUpdate(id, payload, { new: true });
+    } else {
+      updated = await Gallery.findOneAndUpdate({ _id: id }, payload, { new: true, upsert: true });
+    }
     return res.json(updated);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -138,7 +150,12 @@ router.put('/:id', protectAdmin, async (req, res) => {
 // DELETE gallery item (Protected)
 router.delete('/:id', protectAdmin, async (req, res) => {
   try {
-    await Gallery.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      await Gallery.findByIdAndDelete(id);
+    } else {
+      await Gallery.deleteOne({ _id: id });
+    }
     return res.json({ message: 'Gallery item deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
