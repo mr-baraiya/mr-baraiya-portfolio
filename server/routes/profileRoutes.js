@@ -1,6 +1,7 @@
 import express from 'express';
-import Profile from '../models/Profile.js';
 import mongoose from 'mongoose';
+import Profile from '../models/Profile.js';
+import Project from '../models/Project.js';
 import { protectAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -60,31 +61,45 @@ router.get('/', async (req, res) => {
 // PUT update profile settings (Protected)
 router.put('/', protectAdmin, async (req, res) => {
   try {
+    const updateData = { ...req.body };
+    delete updateData._id;
+    delete updateData.__v;
+
     if (mongoose.connection.readyState === 1) {
       let profile = await Profile.findOne();
       if (!profile) {
-        profile = new Profile(req.body);
+        profile = new Profile(updateData);
       } else {
-        Object.assign(profile, req.body);
+        Object.assign(profile, updateData);
         profile.updatedAt = Date.now();
       }
       const saved = await profile.save();
 
-      // Sync project featured flags in MongoDB
+      // Sync project featured flags in MongoDB safely
       if (Array.isArray(saved.featuredProjectIds) && saved.featuredProjectIds.length > 0) {
-        const Project = mongoose.model('Project');
-        await Project.updateMany({}, { $set: { featured: false } });
-        await Project.updateMany(
-          { _id: { $in: saved.featuredProjectIds } },
-          { $set: { featured: true } }
-        );
+        try {
+          const validObjectIds = saved.featuredProjectIds
+            .filter(id => id && mongoose.Types.ObjectId.isValid(id))
+            .map(id => new mongoose.Types.ObjectId(id));
+
+          await Project.updateMany({}, { $set: { featured: false } });
+          if (validObjectIds.length > 0) {
+            await Project.updateMany(
+              { _id: { $in: validObjectIds } },
+              { $set: { featured: true } }
+            );
+          }
+        } catch (projSyncErr) {
+          console.warn('[Profile Sync Warning] Could not sync featured projects:', projSyncErr.message);
+        }
       }
 
       return res.json(saved);
     }
-    Object.assign(defaultProfile, req.body);
+    Object.assign(defaultProfile, updateData);
     return res.json(defaultProfile);
   } catch (error) {
+    console.error('Error updating profile:', error);
     res.status(400).json({ error: error.message });
   }
 });
