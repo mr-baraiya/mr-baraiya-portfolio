@@ -2,6 +2,7 @@ import express from 'express';
 import Contact from '../models/Contact.js';
 import mongoose from 'mongoose';
 import { sendContactNotificationEmail, sendContactReplyEmail } from '../config/mailer.js';
+import { protectAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,8 +19,8 @@ const fallbackMessages = [
   }
 ];
 
-// GET all contact messages (Admin functionality)
-router.get('/', async (req, res) => {
+// GET all contact messages (Admin functionality - Protected)
+router.get('/', protectAdmin, async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
       const messages = await Contact.find().sort({ createdAt: -1 });
@@ -31,7 +32,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST send message from Contact form to MongoDB with Validation & Email Notification
+// POST send message from Contact form to MongoDB with Validation & Email Notification (Public for visitors)
 router.post('/', async (req, res) => {
   try {
     const { name, email, inquiryType, subject, message } = req.body;
@@ -99,8 +100,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// POST reply to a contact message (Admin action)
-router.post('/:id/reply', async (req, res) => {
+// POST reply to a contact message (Admin action - Protected)
+router.post('/:id/reply', protectAdmin, async (req, res) => {
   try {
     const { replySubject, replyMessage } = req.body;
 
@@ -160,8 +161,8 @@ router.post('/:id/reply', async (req, res) => {
   }
 });
 
-// DELETE a contact message
-router.delete('/:id', async (req, res) => {
+// DELETE a contact message (Protected)
+router.delete('/:id', protectAdmin, async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
       await Contact.findByIdAndDelete(req.params.id);

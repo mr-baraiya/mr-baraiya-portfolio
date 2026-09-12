@@ -103,8 +103,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/gallery/sync-youtube - Trigger instant sync of YouTube Channel videos
-router.post('/sync-youtube', async (req, res) => {
+// POST /api/gallery/sync-youtube - Trigger instant sync of YouTube Channel videos (Protected)
+router.post('/sync-youtube', protectAdmin, async (req, res) => {
   try {
     await syncYouTubeVideos();
     const videoItems = await Gallery.find({ category: 'Videos' }).sort({ createdAt: -1 });
