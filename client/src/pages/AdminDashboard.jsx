@@ -9,9 +9,10 @@ import {
   fetchContactMessages, deleteContactMessage, replyContactMessageApi, fetchServerStatus, logoutAdmin,
   uploadFileApi, changePasswordApi
 } from '../api/apiService';
+import { invalidateAllCache } from '../api/cacheService';
 import { Lock, Key, Eye, EyeOff, ShieldCheck, CheckCircle2, AlertTriangle, CornerUpLeft, Send } from 'lucide-react';
 
-export const AdminDashboard = () => {
+export const AdminDashboard = ({ refreshData }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
@@ -245,6 +246,8 @@ export const AdminDashboard = () => {
 
     try {
       await updateProfileApi(profile);
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       notify('Site profile & 10 social URLs updated in MongoDB database!');
       loadAllData();
     } catch (err) {
@@ -282,6 +285,8 @@ export const AdminDashboard = () => {
         notify('New certificate/achievement added to MongoDB database!');
       }
 
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       setEditingGallery(null);
       setGalleryForm({
         title: '', category: 'Certificates', issuer: '', date: '2026',
@@ -311,6 +316,8 @@ export const AdminDashboard = () => {
   const handleDeleteGallery = async (id) => {
     if (confirm('Delete this gallery item?')) {
       await deleteGalleryApi(id);
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       notify('Gallery item deleted!');
       loadAllData();
     }
@@ -344,6 +351,8 @@ export const AdminDashboard = () => {
         notify('New project added to database!');
       }
 
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       setEditingProject(null);
       setProjectForm({
         title: '', description: '', longDescription: '', category: 'Full-Stack',
@@ -373,6 +382,8 @@ export const AdminDashboard = () => {
   const handleDeleteProject = async (id) => {
     if (confirm('Delete this project from database?')) {
       await deleteProjectApi(id);
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       notify('Project deleted!');
       loadAllData();
     }
@@ -403,6 +414,8 @@ export const AdminDashboard = () => {
         await addSkillApi(payload);
         notify('New skill added to database!');
       }
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       setEditingSkill(null);
       setSkillForm({ name: '', category: 'Frontend', proficiency: 90, color: '#15D8B3', icon: 'Code', description: '' });
       loadAllData();
@@ -427,6 +440,8 @@ export const AdminDashboard = () => {
     if (confirm('Delete this skill from the database?')) {
       try {
         await deleteSkillApi(id);
+        invalidateAllCache();
+        if (typeof refreshData === 'function') refreshData();
         notify('Skill deleted successfully!');
         loadAllData();
       } catch (err) {
@@ -461,6 +476,8 @@ export const AdminDashboard = () => {
         await addExperienceApi(payload);
         notify('New experience added!');
       }
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       setEditingExperience(null);
       setExperienceForm({
         role: '', company: '', location: 'Remote', period: '2024 - Present',
@@ -488,6 +505,8 @@ export const AdminDashboard = () => {
   const handleDeleteExperience = async (id) => {
     if (confirm('Delete this experience entry?')) {
       await deleteExperienceApi(id);
+      invalidateAllCache();
+      if (typeof refreshData === 'function') refreshData();
       notify('Experience entry deleted!');
       loadAllData();
     }
@@ -891,6 +910,29 @@ export const AdminDashboard = () => {
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 className="input-field resize-none text-xs"
               ></textarea>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Detailed About Narrative — Paragraph 1</label>
+                <textarea
+                  rows={4}
+                  value={profile.aboutText1 || ''}
+                  onChange={(e) => setProfile({ ...profile, aboutText1: e.target.value })}
+                  className="input-field resize-none text-xs"
+                  placeholder="Hi, I'm Vishal Baraiya!..."
+                ></textarea>
+              </div>
+              <div>
+                <label className="text-xs font-mono text-[#F8FAFC]/80 block mb-1">Detailed About Narrative — Paragraph 2</label>
+                <textarea
+                  rows={4}
+                  value={profile.aboutText2 || ''}
+                  onChange={(e) => setProfile({ ...profile, aboutText2: e.target.value })}
+                  className="input-field resize-none text-xs"
+                  placeholder="Currently pursuing my B.Tech at Darshan University..."
+                ></textarea>
+              </div>
             </div>
 
             {/* 4 Featured Projects Selector Dropdowns */}

@@ -17,24 +17,25 @@ import {
   ArrowUp
 } from 'lucide-react';
 
-export const Footer = ({ profileData = {} }) => {
+export const Footer = ({ profile = {}, profileData = profile }) => {
+  const p = { ...profileData, ...profile };
   const {
-    name = 'Vishal Baraiya',
-    role = 'B.Tech CSE Student & Full-Stack Developer',
-    statusBadge = 'Open to Internship & Full-Time Roles',
-    github = profileData?.githubUrl || profileData?.github || 'https://github.com/mr-baraiya',
-    linkedin = profileData?.linkedinUrl || profileData?.linkedin || 'https://www.linkedin.com/in/baraiya-vishalbhai/',
-    leetcode = 'https://leetcode.com/u/mr-baraiya/',
-    codechef = 'https://www.codechef.com/users/baraiyavishal',
-    hackerrank = 'https://www.hackerrank.com/profile/vvbaraiya32',
-    kaggle = 'https://www.kaggle.com/mrbaraiya',
-    huggingface = 'https://huggingface.co/mr-baraiya',
-    twitter = 'https://x.com/mr_baraiya_32',
-    youtube = 'https://www.youtube.com/@Vi.685_junior',
-    instagram = 'https://www.instagram.com/vishalbaraiya_1014/',
-    whatsapp = 'https://wa.me/917383359679',
-    email = 'baraiyavishalbhai32@gmail.com'
-  } = profileData;
+    name = p.name || 'Vishal Baraiya',
+    role = p.role || 'Software Engineer & CS Student | Web Development, AI/ML & DevOps',
+    statusBadge = p.statusBadge || 'Available for full-time, part-time & freelance opportunities',
+    github = p.githubUrl || p.github || 'https://github.com/mr-baraiya',
+    linkedin = p.linkedinUrl || p.linkedin || 'https://www.linkedin.com/in/baraiya-vishalbhai/',
+    leetcode = p.leetcodeUrl || p.leetcode || 'https://leetcode.com/u/mr_baraiya/',
+    codechef = p.codechefUrl || p.codechef || 'https://www.codechef.com/users/mr_baraiya',
+    hackerrank = p.hackerrankUrl || p.hackerrank || 'https://www.hackerrank.com/profile/h23010101014',
+    kaggle = p.kaggleUrl || p.kaggle || 'https://www.kaggle.com/vishalbaraiya1014',
+    huggingface = p.huggingfaceUrl || p.huggingface || 'https://huggingface.co/mr-baraiya',
+    twitter = p.twitterUrl || p.twitter || 'https://x.com/baraiya1014',
+    youtube = p.youtubeUrl || p.youtube || 'https://www.youtube.com/@Vi.685_junior',
+    instagram = p.instagramUrl || p.instagram || 'https://www.instagram.com/vishalbaraiya_1014/',
+    whatsapp = p.whatsappUrl || p.whatsapp || 'https://wa.me/917383359679',
+    email = p.email || 'baraiyavishalbhai32@gmail.com'
+  } = p;
 
   const socialLinks = [
     { name: 'GitHub', url: github, icon: Github },
